@@ -9,9 +9,9 @@ Partner is a vanilla content API mod that adds a new card type to the game. In s
 [Lovely](https://github.com/ethangreen-dev/lovely-injector) `Lovely (>=0.6)`
 
 ## Features
-Initially provide 16 basic partners.
+Initially provide 16 basic Partners.
 
-If you have a joker that corresponds to the partner you accept, the partner will become more powerful with a Buff form! The initial 16 basic partners all have a Buff form.
+If you have a Joker that corresponds to the Partner you accept, the Partner will become more powerful with a Buff form! The initial 16 basic Partners all have a Buff form.
 
 | Partner  | Base form                          | Buff form                                        |
 |----------|------------------------------------|--------------------------------------------------|
@@ -32,4 +32,4 @@ If you have a joker that corresponds to the partner you accept, the partner will
 | Bleed    | Give X1.5 Mult                     | Give X3 Mult                                     |
 | Blaze    | Upgrade 1 level                    | Upgrade 2 levels                                 |
 
-The unlocking condition for all basic partners are used the corresponding Joker to win on Gold Stake difficulty.
+The unlocking condition for all basic Partners are used the corresponding Joker to win on Gold Stake difficulty.
