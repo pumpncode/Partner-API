@@ -5,4 +5,5 @@ Partner is a vanilla content API mod that adds a new card type to the game. In s
 
 ## Requirements
 [Steamodded](https://github.com/Steamodded/smods) `Steamodded (>=1.0.0~BETA-0323b)`
-[Lovely](https://github.com/ethangreen-dev/lovely-injector?tab=readme-ov-file#manual-installation) `Lovely (>=0.6)`
+
+[Lovely](https://github.com/ethangreen-dev/lovely-injector) `Lovely (>=0.6)`
