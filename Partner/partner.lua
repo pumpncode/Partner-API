@@ -911,7 +911,7 @@ Partner_API.Partner{
             return true end}))
             card_eval_status_text(card, "extra", nil, nil, nil, {message = localize("k_reset"), colour = G.C.RED})
         end
-        if context.partner_click and ((G.GAME.dollars - G.GAME.bankrupt_at) >= card.ability.extra.cost) then
+        if context.partner_click and ((to_big(G.GAME.dollars) - to_big(G.GAME.bankrupt_at)) >= to_big(card.ability.extra.cost)) then
             G.GAME.partner_click_deal = true
             local benefits = 1
             if next(SMODS.find_card("j_throwback")) then benefits = 2 end
@@ -1052,3 +1052,12 @@ Partner_API.Partner{
         end
     end,
 }
+
+-- Talisman compat.
+to_big = to_big or function(a)
+	return a
+end
+
+to_number = to_number or function(a)
+	return a
+end
