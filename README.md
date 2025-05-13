@@ -17,7 +17,7 @@ If you have a Joker that corresponds to the Partner you accept, the Partner will
 |----------|------------------------------------|--------------------------------------------------|
 | Jimbo    | Gain +2 Chips                      | Gain +20 Chips                                   |
 | Mute     | Retrigger 1 additional time        | Retrigger 2 additional times                     |
-| Punch    | Give +1 Mult                       | Give +2 Mult                                     |
+| Punch    | Gain +1 Mult                       | Gain +2 Mult                                     |
 | Hatch    | Sell value +$1                     | Sell value +$2                                   |
 | Steal    | Gain +2 Hands                      | Gain +4 Hands                                    |
 | Pale     | Earn $1                            | Earn $2                                          |
