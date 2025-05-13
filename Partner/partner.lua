@@ -346,6 +346,15 @@ function Card:click()
     end
 end
 
+-- Talisman Compat
+to_big = to_big or function(a)
+    return a
+end
+
+to_number = to_number or function(a)
+    return a
+end
+
 function Card:calculate_partner(context)
     if not context then return end
     local obj = self.config.center
@@ -1052,12 +1061,3 @@ Partner_API.Partner{
         end
     end,
 }
-
--- Talisman compat.
-to_big = to_big or function(a)
-	return a
-end
-
-to_number = to_number or function(a)
-	return a
-end
