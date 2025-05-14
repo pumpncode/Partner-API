@@ -1,5 +1,5 @@
 [manifest]
-version = "1.0.1c"
+version = "1.0.1e"
 dump_lua = true
 priority = 0
 
@@ -28,9 +28,12 @@ pattern = '''-- context.after calculations'''
 position = "before"
 payload = '''
 
-        if G.GAME.selected_partner_card then
-            G.GAME.selected_partner_card:calculate_partner({full_hand = G.play.cards, scoring_hand = scoring_hand, scoring_name = text, poker_hands = poker_hands, partner_after = true})
+    if G.GAME.selected_partner_card then
+        local ret = G.GAME.selected_partner_card:calculate_partner({full_hand = G.play.cards, scoring_hand = scoring_hand, scoring_name = text, poker_hands = poker_hands, partner_after = true})
+        if ret then
+            SMODS.trigger_effects({{individual = ret}}, G.GAME.selected_partner_card)
         end
+    end
 
 '''
 match_indent = false
@@ -44,7 +47,10 @@ position = "before"
 payload = '''
 
         if G.GAME.selected_partner_card then
-            G.GAME.selected_partner_card:calculate_partner({full_hand = G.play.cards, scoring_hand = scoring_hand, scoring_name = text, poker_hands = poker_hands, partner_before = true})
+            local ret = G.GAME.selected_partner_card:calculate_partner({full_hand = G.play.cards, scoring_hand = scoring_hand, scoring_name = text, poker_hands = poker_hands, partner_before = true})
+            if ret then
+                SMODS.trigger_effects({{individual = ret}}, G.GAME.selected_partner_card)
+            end
         end
 
 '''
@@ -59,7 +65,10 @@ position = "before"
 payload = '''
 
             if G.GAME.selected_partner_card then
-                G.GAME.selected_partner_card:calculate_partner({partner_end_of_round = true, game_over = game_over})
+                local ret = G.GAME.selected_partner_card:calculate_partner({partner_end_of_round = true, game_over = game_over})
+                if ret then
+                    SMODS.trigger_effects({{individual = ret}}, G.GAME.selected_partner_card)
+                end
             end
 
 '''
@@ -74,7 +83,10 @@ position = "before"
 payload = '''
 
             if G.GAME.selected_partner_card then
-                G.GAME.selected_partner_card:calculate_partner({partner_setting_blind = true, blind = G.GAME.round_resets.blind})
+                local ret = G.GAME.selected_partner_card:calculate_partner({partner_setting_blind = true, blind = G.GAME.round_resets.blind})
+                if ret then
+                    SMODS.trigger_effects({{individual = ret}}, G.GAME.selected_partner_card)
+                end
             end
 
 '''
@@ -89,7 +101,10 @@ position = "before"
 payload = '''
 
         if G.GAME.selected_partner_card then
-            G.GAME.selected_partner_card:calculate_partner({partner_pre_discard = true, full_hand = G.hand.highlighted, hook = hook})
+            local ret = G.GAME.selected_partner_card:calculate_partner({partner_pre_discard = true, full_hand = G.hand.highlighted, hook = hook})
+            if ret then
+                SMODS.trigger_effects({{individual = ret}}, G.GAME.selected_partner_card)
+            end
         end
 
 '''
@@ -105,8 +120,11 @@ payload = '''
 
             if G.GAME.selected_partner_card then
                 local ret = G.GAME.selected_partner_card:calculate_partner({partner_discard = true, other_card = G.hand.highlighted[i], full_hand = G.hand.highlighted})
-                if ret and ret.remove then
-                    removed = true
+                if ret then
+                    if ret.remove then
+                        removed = true
+                    end
+                    SMODS.trigger_effects({{individual = ret}}, G.GAME.selected_partner_card)
                 end
             end
 
@@ -170,7 +188,10 @@ position = "before"
 payload = '''
 
             if G.GAME.selected_partner_card then
-                G.GAME.selected_partner_card:calculate_partner({partner_open_booster = true, card = self})
+                local ret = G.GAME.selected_partner_card:calculate_partner({partner_open_booster = true, card = self})
+                if ret then
+                    SMODS.trigger_effects({{individual = ret}}, G.GAME.selected_partner_card)
+                end
             end
 
 '''
@@ -185,7 +206,10 @@ position = "before"
 payload = '''
 
                                 if G.GAME.selected_partner_card then
-                                    G.GAME.selected_partner_card:calculate_partner({partner_starting_shop = true})
+                                    local ret = G.GAME.selected_partner_card:calculate_partner({partner_starting_shop = true})
+                                    if ret then
+                                        SMODS.trigger_effects({{individual = ret}}, G.GAME.selected_partner_card)
+                                    end
                                 end
 
 '''
@@ -200,7 +224,10 @@ position = "before"
 payload = '''
 
             if G.GAME.selected_partner_card then
-                G.GAME.selected_partner_card:calculate_partner({partner_reroll_shop = true, cost = reroll_cost})
+                local ret = G.GAME.selected_partner_card:calculate_partner({partner_reroll_shop = true, cost = reroll_cost})
+                if ret then
+                    SMODS.trigger_effects({{individual = ret}}, G.GAME.selected_partner_card)
+                end
             end
 
 '''
@@ -215,7 +242,10 @@ position = "before"
 payload = '''
 
       if G.GAME.selected_partner_card then
-        G.GAME.selected_partner_card:calculate_partner({partner_ending_shop = true})
+        local ret = G.GAME.selected_partner_card:calculate_partner({partner_ending_shop = true})
+        if ret then
+          SMODS.trigger_effects({{individual = ret}}, G.GAME.selected_partner_card)
+        end
       end
 
 '''
@@ -230,7 +260,10 @@ position = "before"
 payload = '''
 
           if G.GAME.selected_partner_card then
-            G.GAME.selected_partner_card:calculate_partner({partner_skip_blind = true})
+            local ret = G.GAME.selected_partner_card:calculate_partner({partner_skip_blind = true})
+            if ret then
+              SMODS.trigger_effects({{individual = ret}}, G.GAME.selected_partner_card)
+            end
           end
 
 '''
@@ -245,7 +278,10 @@ position = "before"
 payload = '''
 
     if G.GAME.selected_partner_card then
-      G.GAME.selected_partner_card:calculate_partner({partner_skipping_booster = true, booster = booster_obj})
+      local ret = G.GAME.selected_partner_card:calculate_partner({partner_skipping_booster = true, booster = booster_obj})
+      if ret then
+        SMODS.trigger_effects({{individual = ret}}, G.GAME.selected_partner_card)
+      end
     end
 
 '''
