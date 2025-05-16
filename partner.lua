@@ -155,6 +155,73 @@ function create_UIBox_notify_alert(_achievement, _type)
     return ret
 end
 
+function Card:add_partner_speech_bubble(forced_key)
+    if self.children.speech_bubble then self.children.speech_bubble:remove() end
+    local align = nil
+    if self.T.x+self.T.w/2 > G.ROOM.T.w/2 then align = "cl" end
+    self.config.speech_bubble_align = {align = align or "cr", offset = {x=align and -0.1 or 0.1,y=0}, parent = self}
+    self.children.speech_bubble = UIBox{
+        definition = G.UIDEF.partner_speech_bubble(forced_key),
+        config = self.config.speech_bubble_align
+    }
+    self.children.speech_bubble:set_role{role_type = "Minor", xy_bond = "Strong", r_bond = "Weak", major = self}
+    self.children.speech_bubble.states.visible = false
+end
+
+function G.UIDEF.partner_speech_bubble(forced_key)
+    local text = {}
+    localize{type = "quips", key = forced_key or "pq_1", nodes=text}
+    local row = {}
+    for k, v in ipairs(text) do
+        row[#row+1] = {n=G.UIT.R, config={align = "cl"}, nodes=v}
+    end
+    local t = {n=G.UIT.ROOT, config = {align = "cm", minh = 1, r = 0.3, padding = 0.07, minw = 1, colour = G.C.JOKER_GREY, shadow = true}, nodes={
+        {n=G.UIT.C, config={align = "cm", minh = 1, r = 0.2, padding = 0.1, minw = 1, colour = G.C.WHITE}, nodes={
+            {n=G.UIT.C, config={align = "cm", minh = 1, r = 0.2, padding = 0.03, minw = 1, colour = G.C.WHITE}, nodes=row}
+        }}
+    }}
+    return t
+end
+
+function Card:partner_say_stuff(n, not_first)
+    self.talking = true
+    if not not_first then 
+        G.E_MANAGER:add_event(Event({trigger = "after", delay = 0.1, func = function()
+            if self.children.speech_bubble then self.children.speech_bubble.states.visible = true end
+            self:partner_say_stuff(n, true)
+        return true end}))
+    else
+        if n <= 0 then self.talking = false; return end
+        play_sound("voice"..math.random(1, 11), G.SPEEDFACTOR*(math.random()*0.2+1), 0.5)
+        self:juice_up()
+        G.E_MANAGER:add_event(Event({trigger = "after", blockable = false, blocking = false, delay = 0.13, func = function()
+            self:partner_say_stuff(n-1, true)
+        return true end}))
+    end
+end
+
+function Card:remove_partner_speech_bubble()
+    if self.children.speech_bubble then self.children.speech_bubble:remove(); self.children.speech_bubble = nil end
+end
+
+local Card_draw_ref = Card.draw
+function Card:draw(layer)
+    Card_draw_ref(self, layer)
+    if self.children.speech_bubble then
+        self.children.speech_bubble:draw()
+    end
+end
+
+local Card_move_ref = Card.move
+function Card:move(dt)
+    Card_move_ref(self, dt)
+    if self.children.speech_bubble then
+        local align = nil
+        if self.T.x+self.T.w/2 > G.ROOM.T.w/2 then align = "cl" end
+        self.children.speech_bubble:set_alignment({type = align or "cr", offset = {x=align and -0.1 or 0.1,y=0}, parent = self})
+    end
+end
+
 -- New Run Page
 
 G.FUNCS.run_setup_partners_option = function(e)
@@ -342,6 +409,7 @@ local Card_click_ref = Card.click
 function Card:click()
     Card_click_ref(self)
     if G.GAME.selected_partner_card and G.GAME.selected_partner_card == self and not G.GAME.partner_click_deal then
+        self:remove_partner_speech_bubble()
         G.GAME.selected_partner_card:calculate_partner({partner_click = true})
     end
 end
@@ -396,6 +464,12 @@ function SMODS.calculate_card_areas(_type, context, return_table, args)
         end
     end
     return flags
+end
+
+-- Localization Page
+
+function Partner_API.process_loc_text()
+    G.localization.descriptions.Partner = G.localization.descriptions.Partner or {}
 end
 
 -- Atlas Page
