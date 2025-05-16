@@ -20,10 +20,11 @@ Partner_API.Partner = SMODS.Center:extend{
         if self.config.extra.related_card then
             local link_key = self.config.extra.related_card
             if link_key and next(SMODS.find_card(link_key)) then
-                local main_end = {}
-                localize{type = "other", key = "partner_benefits", nodes = main_end}
-                main_end = main_end[1]
-                desc_nodes[#desc_nodes+1] = main_end
+                info_queue[#info_queue+1] = {key = "partner_benefits", set = "Other"}
+                --local main_end = {}
+                --localize{type = "other", key = "partner_benefits", nodes = main_end}
+                --main_end = main_end[1]
+                --desc_nodes[#desc_nodes+1] = main_end
             end
         end
     end
@@ -430,6 +431,20 @@ function Card:calculate_partner(context)
         local ret = obj:calculate(self, context)
         if ret then return ret end
     end
+    --Genneral speech bubble
+    if context.partner_setting_blind and G.GAME.round == 1 then
+        G.E_MANAGER:add_event(Event({func = function()
+        self:add_partner_speech_bubble('pnr_'..math.random(1,6))
+        self:partner_say_stuff(5)
+        return true end}))
+    end
+
+    if context.partner_setting_blind and context.blind.boss and G.GAME.round_resets.ante == 8 then
+        G.E_MANAGER:add_event(Event({func = function()
+        self:add_partner_speech_bubble('dq_1')
+        self:partner_say_stuff(5)
+        return true end}))
+    end
 end
 
 function Card:calculate_partner_cash()
@@ -501,7 +516,7 @@ Partner_API.Partner{
     config = {extra = {related_card = "j_joker", chips = 0, chip_mod = 2}},
     loc_vars = function(self, info_queue, card)
         local benefits = 1
-        if next(SMODS.find_card("j_joker")) then benefits = 10 end
+        if next(SMODS.find_card("j_joker")) then benefits = 2 end
         return { vars = {card.ability.extra.chips, card.ability.extra.chip_mod*benefits} }
     end,
     calculate = function(self, card, context)
@@ -514,7 +529,7 @@ Partner_API.Partner{
         end
         if context.partner_before then
             local benefits = 1
-            if next(SMODS.find_card("j_joker")) then benefits = 10 end
+            if next(SMODS.find_card("j_joker")) then benefits = 2 end
             card.ability.extra.chips = card.ability.extra.chips + card.ability.extra.chip_mod*benefits
             card_eval_status_text(card, "extra", nil, nil, nil, {message = localize("k_upgrade_ex"), colour = G.C.CHIPS})
         end
@@ -576,7 +591,7 @@ Partner_API.Partner{
     pos = {x = 2, y = 0},
     loc_txt = {},
     atlas = "Partner",
-    config = {extra = {related_card = "j_raised_fist", mult = 1, mult_mod = 1}},
+    config = {extra = {related_card = "j_raised_fist", mult = 1, mult_mod = 0.5}},
     loc_vars = function(self, info_queue, card)
         return { vars = {card.ability.extra.mult} }
     end,
@@ -746,18 +761,19 @@ Partner_API.Partner{
     calculate = function(self, card, context)
         if context.partner_open_booster then
             G.E_MANAGER:add_event(Event({func = function()
-                local _planet = nil
-                for k, v in pairs(G.P_CENTER_POOLS.Planet) do
-                    if v.config.hand_type == G.GAME.last_hand_played then
-                        _planet = v.key
-                    end
-                end
-                local _card = create_card("Planet", G.pack_cards, nil, nil, nil, nil, _planet, "hal_pnr")
+                --thats too unbalanced
+                --local _planet = nil
+                --for k, v in pairs(G.P_CENTER_POOLS.Planet) do
+                    --if v.config.hand_type == G.GAME.last_hand_played then
+                        --_planet = v.key
+                    --end
+                --end
+                local _card = create_card("Joker", G.pack_cards, nil, nil, nil, nil, nil, "hal_pnr")
                 _card:add_to_deck()
                 G.pack_cards:emplace(_card)
                 if next(SMODS.find_card("j_hallucination")) then G.GAME.pack_choices = G.GAME.pack_choices + 1 end
             return true end}))
-            card_eval_status_text(card, "extra", nil, nil, nil, {message = localize("k_plus_planet"), colour = G.C.SECONDARY_SET.Planet})
+            card_eval_status_text(card, "extra", nil, nil, nil, {message = localize("k_plus_joker"), colour = G.C.GREEN})
         end
     end,
     check_for_unlock = function(self, args)
@@ -901,7 +917,7 @@ Partner_API.Partner{
     pos = {x = 2, y = 2},
     loc_txt = {},
     atlas = "Partner",
-    config = {extra = {related_card = "j_trading", discard_dollars = 3}},
+    config = {extra = {related_card = "j_trading", discard_dollars = 2}},
     loc_vars = function(self, info_queue, card)
         return { vars = {card.ability.extra.discard_dollars} }
     end,
@@ -944,7 +960,7 @@ Partner_API.Partner{
     calculate = function(self, card, context)
         if context.partner_reroll_shop and not card.ability.extra.first_reroll then
             for i = 1, #G.shop_jokers.cards do
-                if not G.shop_jokers.cards[i].edition then
+                if not G.shop_jokers.cards[i].edition and G.shop_jokers.cards[i].ability.set == "Joker" then
                     card.ability.extra.first_reroll = true
                     card_eval_status_text(card, "extra", nil, nil, nil, {message = localize{type = "name_text", key = "e_negative", set = "Edition"}, colour = G.C.DARK_EDITION})
                     G.shop_jokers.cards[i]:set_edition({negative = true}, true)
@@ -979,7 +995,9 @@ Partner_API.Partner{
     atlas = "Partner",
     config = {extra = {related_card = "j_throwback", xmult = 1, xmult_mod = 0.5, cost = 2}},
     loc_vars = function(self, info_queue, card)
-        return { vars = {card.ability.extra.xmult, card.ability.extra.cost} }
+        local benefits = 1
+        if next(SMODS.find_card("j_throwback")) then benefits = 2 end
+        return { vars = {card.ability.extra.xmult, card.ability.extra.xmult_mod*benefits, card.ability.extra.cost} }
     end,
     calculate = function(self, card, context)
         if context.partner_main and card.ability.extra.xmult > 1 then

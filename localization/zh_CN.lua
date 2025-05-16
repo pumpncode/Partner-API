@@ -32,6 +32,7 @@ return {
                     "打出牌包含{C:attention}对子{}时",
                     "令手中点数{C:attention}最小{}牌",
                     "给予{C:mult}+#1#{}倍率",
+                    "并永久提升此数值",
                 },
                 unlock={
                     "使用{C:attention}致胜之拳",
@@ -42,7 +43,7 @@ return {
             pnr_partner_egg={
                 name = "鸡蛋伙伴",
                 text = {
-                    "回合结束时",
+                    "每回合结束",
                     "令拥有的所有{C:attention}小丑{}",
                     "{C:attention}售价{}增加{C:money}$#1#{}",
                 },
@@ -55,7 +56,7 @@ return {
             pnr_partner_burglar={
                 name = "窃贼伙伴",
                 text = {
-                    "选择{C:attention}Boss盲注{}后",
+                    "选择{C:attention}Boss盲注{}时",
                     "出牌次数{C:blue}+#1#{}",
                 },
                 unlock={
@@ -79,8 +80,8 @@ return {
             pnr_partner_hallucination={
                 name = "幻觉伙伴",
                 text = {
-                    "令{C:attention}补充包{}增加",
-                    "额外的{C:planet}星球牌{}选项",
+                    "令任意{C:attention}补充包{}增加",
+                    "额外的{C:attention}小丑牌{}选项",
                 },
                 unlock={
                     "使用{C:attention}幻觉",
@@ -103,8 +104,10 @@ return {
             pnr_partner_golden={
                 name = "黄金伙伴",
                 text = {
-                    "回合结束时",
+                    "每回合结束",
                     "获得{C:money}$#1#{}",
+                    "跳过{C:attention}盲注{}时",
+                    "永久提升此数值",
                 },
                 unlock={
                     "使用{C:attention}黄金小丑",
@@ -117,6 +120,8 @@ return {
                 text = {
                     "令所有{C:green}罕见{}小丑",
                     "给予{C:mult}+#1#{}倍率",
+                    "跳过{C:attention}补充包{}时",
+                    "永久提升此数值",
                 },
                 unlock={
                     "使用{C:attention}棒球卡",
@@ -140,8 +145,10 @@ return {
             pnr_partner_flash={
                 name = "闪示伙伴",
                 text = {
-                    "令重掷的{C:attention}第一张{}牌",
-                    "变为{C:dark_edition,T:e_negative}负片{}",
+                    "每个回合一次：",
+                    "在你重掷后",
+                    "为商店的{C:attention}第一张{}小丑",
+                    "添加{C:dark_edition,T:e_negative}负片{}",
                 },
                 unlock={
                     "使用{C:attention}闪示卡",
@@ -152,8 +159,10 @@ return {
             pnr_partner_throwback={
                 name = "回溯伙伴",
                 text = {
-                    "单次{X:mult,C:white}X#1#{}倍率",
-                    "点击消耗{C:money}$#2#{}",
+                    "点击花费{C:money}$#3#{}",
+                    "获得{X:mult,C:white}X#2#{}倍率",
+                    "每次出牌后重置",
+                    "{C:inactive}（当前为{X:mult,C:white}X#1#{C:inactive}倍率）",
                 },
                 unlock={
                     "使用{C:attention}回溯",
@@ -202,7 +211,8 @@ return {
             partner_benefits={
                 name="伙伴增益",
                 text={
-                    "{C:dark_edition,s:0.9}<增益中>",
+                    "拥有对应小丑时",
+                    "伙伴的{C:dark_edition}能力强化",
                 },
             },
         },
@@ -217,6 +227,34 @@ return {
             ml_partner_unique_ability={
                 "小丑可能会强化",
                 "对应伙伴的能力",
+            },
+        },
+        quips={
+            pnr_1={
+                "你好，",
+                "我的朋友！",
+            },
+            pnr_2={
+                "我会一直",
+                "和你在一起的！",
+            },
+            pnr_3={
+                "相信你能有",
+                "亮眼的表现！",
+            },
+            pnr_4={
+                "这局我觉得",
+                "你能赢！",
+            },
+            pnr_5={
+                "专业伙伴",
+                "总是有备而来",
+            },
+            pnr_6={
+                "鸣谢：",
+                "Brookling",
+                "Snowylight",
+                "Betmma",
             },
         },
     },

@@ -19,7 +19,7 @@ return {
                 text = {
                     "Retrigger {C:attention}first{} card",
                     "{C:attention}held in hand",
-                    "{C:attention}#1#{} additional times",
+                    "{C:attention}#1#{} additional time(s)",
                 },
                 unlock={
                     "Used {C:attention}Mime",
@@ -32,9 +32,9 @@ return {
                 text = {
                     "if played hand",
                     "contains a {C:attention}Pair{}",
-                    "the rank of",
-                    "{C:attention}lowest{} ranked card",
-                    "gives {C:mult}+#1#{} Mult",
+                    "the rank of {C:attention}lowest{}",
+                    "ranked card gives {C:mult}+#1#{} Mult",
+                    "and increase this value",
                 },
                 unlock={
                     "Used {C:attention}Raised Fist",
@@ -84,7 +84,7 @@ return {
                 name = "Fantasy",
                 text = {
                     "Add an extra option of",
-                    "{C:planet}Planet{} card when any",
+                    "{C:attention}Joker{} when any",
                     "{C:attention}Booster Pack{} is opened",
                 },
                 unlock={
@@ -111,6 +111,8 @@ return {
                 text = {
                     "Earn {C:money}$#1#{} at",
                     "end of round",
+                    "increase this value",
+                    "when {C:attention}Blind{} is skipped",
                 },
                 unlock={
                     "Used {C:attention}Golden Joker",
@@ -123,6 +125,8 @@ return {
                 text = {
                     "{C:green}Uncommon{} Jokers",
                     "each give {C:mult}+#1#{} Mult",
+                    "increase this value when",
+                    "{C:attention}Booster Pack{} is skipped",
                 },
                 unlock={
                     "Used {C:attention}Baseball Card",
@@ -146,7 +150,8 @@ return {
             pnr_partner_flash={
                 name = "Literacy",
                 text = {
-                    "Next shop card",
+                    "Once per round:",
+                    "next shop joker",
                     "becomes {C:dark_edition,T:e_negative}Negative{}",
                     "after {C:attention}first{} reroll",
                 },
@@ -159,8 +164,10 @@ return {
             pnr_partner_throwback={
                 name = "Jump",
                 text = {
-                    "One-time {X:mult,C:white} X#1# {} Mult",
-                    "click to lose {C:money}$#2#{}",
+                    "Click to spend {C:money}$#3#{}",
+                    "to gain {X:mult,C:white}X#2#{} Mult",
+                    "resets after hand played",
+                    "{C:inactive}(Currently {X:mult,C:white} X#1# {C:inactive} Mult)",
                 },
                 unlock={
                     "Used {C:attention}Throwback",
@@ -173,7 +180,7 @@ return {
                 text = {
                     "Retrigger {C:attention}first{}",
                     "scoring card",
-                    "{C:attention}#1#{} additional times",
+                    "{C:attention}#1#{} additional time(s)",
                 },
                 unlock={
                     "Used {C:attention}Hanging Chad",
@@ -212,7 +219,8 @@ return {
             partner_benefits={
                 name="Partner Benefits",
                 text={
-                    "{C:dark_edition,s:0.9}<buff>",
+                    "Corresponding joker will",
+                    "{C:dark_edition}enhance{} partner ability",
                 },
             },
         },
@@ -227,6 +235,34 @@ return {
             ml_partner_unique_ability={
                 "Cards may enhance the abilities of",
                 "corresponding partners",
+            },
+        },
+        quips={
+            pnr_1={
+                "Hello,",
+                "My friend!",
+            },
+            pnr_2={
+                "I will stay",
+                "with you!",
+            },
+            pnr_3={
+                "I think you will have an",
+                "outstanding performance!",
+            },
+            pnr_4={
+                "I believe you can",
+                "win this run!",
+            },
+            pnr_5={
+                "Professional partner",
+                "always come prepared",
+            },
+            pnr_6={
+                "Credits:",
+                "Brookling",
+                "Snowylight",
+                "Betmma",
             },
         },
     },
