@@ -431,7 +431,7 @@ function Card:calculate_partner(context)
         local ret = obj:calculate(self, context)
         if ret then return ret end
     end
-    --Genneral speech bubble
+    --General speech bubble
     if context.partner_setting_blind and G.GAME.round == 1 then
         G.E_MANAGER:add_event(Event({func = function()
         self:add_partner_speech_bubble('pnr_'..math.random(1,6))
