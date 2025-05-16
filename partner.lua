@@ -429,12 +429,12 @@ function Card:calculate_partner(context)
     local obj = self.config.center
     if self.ability.set == "Partner" and obj.calculate and type(obj.calculate) == "function" then
         local ret = obj:calculate(self, context)
-        self:general_partner_speech()
+        self:general_partner_speech(context)
         if ret then return ret end
     end
 end
 
-function Card:general_partner_speech()
+function Card:general_partner_speech(context)
     if context.partner_setting_blind and G.GAME.round == 1 then
         G.E_MANAGER:add_event(Event({func = function()
             self:add_partner_speech_bubble("pnr_"..math.random(1,6))
