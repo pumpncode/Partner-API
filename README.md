@@ -15,16 +15,16 @@ If you have a Joker that corresponds to the Partner you accept, the Partner will
 
 | Partner  | Base form                          | Buff form                                        |
 |----------|------------------------------------|--------------------------------------------------|
-| Jimbo    | Gain +2 Chips                      | Gain +20 Chips                                   |
+| Jimbo    | Gain +2 Chips                      | Gain +4 Chips                                    |
 | Mute     | Retrigger 1 additional time        | Retrigger 2 additional times                     |
-| Punch    | Gain +1 Mult                       | Gain +2 Mult                                     |
+| Punch    | Gain +0.5 Mult                     | Gain +1 Mult                                     |
 | Hatch    | Sell value +$1                     | Sell value +$2                                   |
 | Steal    | Gain +2 Hands                      | Gain +4 Hands                                    |
 | Pale     | Earn $1                            | Earn $2                                          |
-| Fantasy  | Add an extra option of Planet card | Extra option does not take up the optional count |
+| Fantasy  | Add an extra option of Joker card  | Extra option does not take up the optional count |
 | Divine   | Stock an extra Arcana Pack         | Stock an extra free Mega Arcana Pack             |
-| Plate    | Gain +$1 (skip blind)              | Gain +$2 (skip blind)                            |
-| Batter   | Gain +1 Mult (skip booster)        | Gain +2 Mult (skip booster)                      |
+| Plate    | Skip blind will increase $1        | Skip blind will increase $2                      |
+| Batter   | Skip pack will increase 1 Mult     | Skip pack will increase 2 Mult                   |
 | Bargain  | Destroy up to 1 card               | Destroy up to 5 cards                            |
 | Literacy | Give Negative edition              | Give Negative edition and free                   |
 | Jump     | Gain +X0.5 Mult                    | Gain +X1 Mult                                    |
