@@ -211,8 +211,8 @@ return {
             partner_benefits={
                 name="伙伴增益",
                 text={
-                    "拥有对应小丑时",
-                    "伙伴的{C:dark_edition}能力强化",
+                    "对应小丑会",
+                    "{C:dark_edition}增益{}伙伴",
                 },
             },
         },
@@ -224,6 +224,7 @@ return {
             b_partner_refuse="无伙伴模式",
             k_partner="伙伴",
             k_enable_partner="启用伙伴",
+            k_temporary_unlock_all="临时解锁全部",
             ml_partner_unique_ability={
                 "小丑可能会强化",
                 "对应伙伴的能力",
@@ -255,6 +256,47 @@ return {
                 "Brookling",
                 "Snowylight",
                 "Betmma",
+            },
+            pnr_partner_mime_1={
+                ":)"
+            },
+            pnr_partner_mime_2={
+                ":D"
+            },
+            pnr_partner_mime_3={
+                ":P"
+            },
+            pnr_partner_mime_4={
+                ":I"
+            },
+            pnr_partner_mime_5={
+                "XD"
+            },
+            pnr_partner_mime_6={
+                ":l"
+            },
+            pnr_partner_throwback_1={
+                "太酷啦！"
+            },
+            pnr_partner_throwback_2={
+                "如果你不喜欢",
+                "某些盲注",
+                "说不然后跳过！"
+            },
+            pnr_partner_throwback_3={
+                "明智的选择！"
+            },
+            pnr_partner_throwback_4={
+                "冲啊!"
+            },
+            pnr_partner_throwback_5={
+                "让我们",
+                "一起摇摆！"
+            },
+            pnr_partner_throwback_6={
+                "芜湖！", 
+                "最机灵的伙伴",
+                "来报到啦！"
             },
         },
     },
