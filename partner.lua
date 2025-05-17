@@ -181,6 +181,17 @@ function Card:add_partner_speech_bubble(forced_key)
     }
     self.children.speech_bubble:set_role{role_type = "Minor", xy_bond = "Strong", r_bond = "Weak", major = self}
     self.children.speech_bubble.states.visible = false
+    local hold_time = (G.SETTINGS.GAMESPEED*4) or 4
+    G.E_MANAGER:add_event(Event({
+        trigger = 'after',
+        delay = hold_time,
+        blockable = false,
+        blocking = false,
+        func = function()
+        self:remove_partner_speech_bubble()
+        return true
+        end
+    }))
 end
 
 function G.UIDEF.partner_speech_bubble(forced_key)
@@ -208,7 +219,7 @@ function Card:partner_say_stuff(n, not_first)
     else
         if n <= 0 then self.talking = false; return end
         play_sound("voice"..math.random(1, 11), G.SPEEDFACTOR*(math.random()*0.2+1), 0.5)
-        self:juice_up()
+        self:juice_up(0.6, 1)
         G.E_MANAGER:add_event(Event({trigger = "after", blockable = false, blocking = false, delay = 0.13, func = function()
             self:partner_say_stuff(n-1, true)
         return true end}))
@@ -424,8 +435,11 @@ local Card_click_ref = Card.click
 function Card:click()
     Card_click_ref(self)
     if G.GAME.selected_partner_card and G.GAME.selected_partner_card == self and not G.GAME.partner_click_deal then
+        if self.children.speech_bubble then
         self:remove_partner_speech_bubble()
+        else
         G.GAME.selected_partner_card:calculate_partner({partner_click = true})
+        end
     end
 end
 
@@ -469,7 +483,7 @@ function Card:general_partner_speech(context)
             return true end}))
         end
     end
-    if context.partner_setting_blind and context.blind.boss and G.GAME.round_resets.ante == 8 then
+    if context.partner_setting_blind and context.blind.boss and G.GAME.round_resets.ante == G.GAME.win_ante then
         if self.config.center.individual_quips then
             G.E_MANAGER:add_event(Event({func = function()
                 local max_quips = 0
