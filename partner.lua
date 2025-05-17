@@ -5,6 +5,8 @@ Partner_API = SMODS.current_mod
 Partner_API.Partner = SMODS.Center:extend{
     unlocked = true,
     discovered = false,
+    no_quips = false,
+    individual_quips = 0,
     config = {},
     set = "Partner",
     class_prefix = "pnr",
@@ -35,7 +37,7 @@ Partner_API.Partner = SMODS.Center:extend{
 Partner_API.custom_collection_tabs = function()
     local tally = 0
     for _, v in pairs(G.P_CENTER_POOLS["Partner"]) do
-        if v.unlocked then
+        if v:is_unlocked() then
             tally = tally + 1
         end
     end
@@ -103,19 +105,31 @@ end
 
 -- UI Page
 
+function Partner_API.Partner:is_unlocked()
+    return self.unlocked or Partner_API.config.temporary_unlock_all or G.PROFILES[G.SETTINGS.profile].all_unlocked
+end
+
 Partner_API.config_tab = function()
     return {n=G.UIT.ROOT, config = {align = "cm", padding = 0.05, colour = G.C.CLEAR}, nodes={
         create_toggle({label = localize("k_enable_partner"), ref_table = Partner_API.config, ref_value = "enable_partner"}),
+        create_toggle({label = localize("k_temporary_unlock_all"), ref_table = Partner_API.config, ref_value = "temporary_unlock_all"}),
     }}
 end
 
 local Card_set_sprites_ref = Card.set_sprites
 function Card:set_sprites(_center, _front)
     Card_set_sprites_ref(self, _center, _front)
-    if _center and _center.set == "Partner" and not _center.unlocked then
+    if _center and _center.set == "Partner" and not _center:is_unlocked() then
         self.children.center.atlas = G.ASSET_ATLAS["partner_Partner"]
         self.children.center:set_sprite_pos({x = 0, y = 4})
     end
+end
+
+local generate_card_ui_ref = generate_card_ui
+function generate_card_ui(_c, full_UI_table, specific_vars, card_type, badges, hide_desc, main_start, main_end, card)
+    if _c and _c.set == "Partner" and _c:is_unlocked() and card_type and card_type == "Locked" then card_type = "Partner" end
+    if _c and _c.set == "Partner" and _c:is_unlocked() and badges then badges.card_type = "Partner" end
+    return generate_card_ui_ref(_c, full_UI_table, specific_vars, card_type, badges, hide_desc, main_start, main_end, card)
 end
 
 local Card_update_ref = Card.update
@@ -239,7 +253,7 @@ function create_UIBox_partners_option()
     G.partner_area = CardArea(G.ROOM.T.x, G.ROOM.T.h, G.CARD_W, G.CARD_H, {card_limit = 1, type = "title", highlight_limit = 0})
     local center = G.GAME.viewed_partner
     local card = Card(G.partner_area.T.x+G.partner_area.T.w/2-G.CARD_W*23/71, G.partner_area.T.y+G.partner_area.T.h/2-G.CARD_H*29/95, G.CARD_W*46/71, G.CARD_H*58/95, G.P_CARDS.empty, center)
-    local UI_table = G.GAME.viewed_partner.unlocked and generate_card_ui(G.GAME.viewed_partner, nil, nil, "Partner") or generate_card_ui(G.GAME.viewed_partner, nil, nil, "Locked")
+    local UI_table = G.GAME.viewed_partner:is_unlocked() and generate_card_ui(G.GAME.viewed_partner, nil, nil, "Partner") or generate_card_ui(G.GAME.viewed_partner, nil, nil, "Locked")
     local partner_main = {n=G.UIT.ROOT, config={align = "cm", minw = 3.5, minh = 1.75, id = G.GAME.viewed_partner.name, colour = G.C.CLEAR}, nodes={desc_from_rows(UI_table.main, true, 3.5)}}
     --card.sticker = get_joker_win_sticker(center)
     card.states.hover.can = false
@@ -298,7 +312,7 @@ end
 
 G.FUNCS.RUN_SETUP_check_partner_name = function(e)
     if e.config.object and G.GAME.viewed_partner.name ~= e.config.id then
-        local partner_name = G.GAME.viewed_partner.unlocked and localize{type = "name_text", set = "Partner", key = G.GAME.viewed_partner.key} or localize("k_locked")
+        local partner_name = G.GAME.viewed_partner:is_unlocked() and localize{type = "name_text", set = "Partner", key = G.GAME.viewed_partner.key} or localize("k_locked")
         e.config.object:remove()
         e.config.object = UIBox{
             definition = {n=G.UIT.ROOT, config={align = "cm", colour = G.C.CLEAR}, nodes={
@@ -312,7 +326,7 @@ end
 
 G.FUNCS.RUN_SETUP_check_partner = function(e)
     if G.GAME.viewed_partner.name ~= e.config.id then
-        local UI_table = G.GAME.viewed_partner.unlocked and generate_card_ui(G.GAME.viewed_partner, nil, nil, "Partner") or generate_card_ui(G.GAME.viewed_partner, nil, nil, "Locked")
+        local UI_table = G.GAME.viewed_partner:is_unlocked() and generate_card_ui(G.GAME.viewed_partner, nil, nil, "Partner") or generate_card_ui(G.GAME.viewed_partner, nil, nil, "Locked")
         local partner_main = {n=G.UIT.ROOT, config={align = "cm", minw = 3.5, minh = 1.75, id = G.GAME.viewed_partner.name, colour = G.C.CLEAR}, nodes={desc_from_rows(UI_table.main, true, 3.5)}}
         e.config.object:remove() 
         e.config.object = UIBox{
@@ -329,7 +343,7 @@ G.FUNCS.refuse_partner = function()
 end
 
 G.FUNCS.select_partner_button = function(e)
-    if G.GAME.viewed_partner and G.GAME.viewed_partner.unlocked then
+    if G.GAME.viewed_partner and G.GAME.viewed_partner:is_unlocked() then
         e.config.colour = G.C.GREEN
         e.config.button = "select_partner"
     else
@@ -435,17 +449,32 @@ function Card:calculate_partner(context)
 end
 
 function Card:general_partner_speech(context)
+    if not context or self.config.center.no_quips then return end
     if context.partner_setting_blind and G.GAME.round == 1 then
-        G.E_MANAGER:add_event(Event({func = function()
-            self:add_partner_speech_bubble("pnr_"..math.random(1,6))
-            self:partner_say_stuff(5)
-        return true end}))
+        if self.config.center.individual_quips > 0 then
+            G.E_MANAGER:add_event(Event({func = function()
+                self:add_partner_speech_bubble(self.config.center.key.."_"..math.random(1, self.config.center.individual_quips))
+                self:partner_say_stuff(5)
+            return true end}))
+        else
+            G.E_MANAGER:add_event(Event({func = function()
+                self:add_partner_speech_bubble("pnr_"..math.random(1,6))
+                self:partner_say_stuff(5)
+            return true end}))
+        end
     end
     if context.partner_setting_blind and context.blind.boss and G.GAME.round_resets.ante == 8 then
-        G.E_MANAGER:add_event(Event({func = function()
-            self:add_partner_speech_bubble("dq_1")
-            self:partner_say_stuff(5)
-        return true end}))
+        if self.config.center.individual_quips > 0 then
+            G.E_MANAGER:add_event(Event({func = function()
+                self:add_partner_speech_bubble(self.config.center.key.."_"..math.random(1, self.config.center.individual_quips))
+                self:partner_say_stuff(5)
+            return true end}))
+        else
+            G.E_MANAGER:add_event(Event({func = function()
+                self:add_partner_speech_bubble("dq_1")
+                self:partner_say_stuff(5)
+            return true end}))
+        end
     end
 end
 
@@ -556,6 +585,7 @@ Partner_API.Partner{
     pos = {x = 1, y = 0},
     loc_txt = {},
     atlas = "Partner",
+    individual_quips = 6,
     config = {extra = {related_card = "j_mime", repetitions = 1}},
     loc_vars = function(self, info_queue, card)
         local benefits = 1
@@ -995,6 +1025,7 @@ Partner_API.Partner{
     pos = {x = 0, y = 3},
     loc_txt = {},
     atlas = "Partner",
+    individual_quips = 6,
     config = {extra = {related_card = "j_throwback", xmult = 1, xmult_mod = 0.5, cost = 2}},
     loc_vars = function(self, info_queue, card)
         local benefits = 1
