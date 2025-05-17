@@ -6,7 +6,7 @@ Partner_API.Partner = SMODS.Center:extend{
     unlocked = true,
     discovered = false,
     no_quips = false,
-    individual_quips = 0,
+    individual_quips = false,
     config = {},
     set = "Partner",
     class_prefix = "pnr",
@@ -451,9 +451,15 @@ end
 function Card:general_partner_speech(context)
     if not context or self.config.center.no_quips then return end
     if context.partner_setting_blind and G.GAME.round == 1 then
-        if self.config.center.individual_quips > 0 then
+        if self.config.center.individual_quips then
             G.E_MANAGER:add_event(Event({func = function()
-                self:add_partner_speech_bubble(self.config.center.key.."_"..math.random(1, self.config.center.individual_quips))
+                local max_quips = 0
+                for k, v in pairs(G.localization.misc.quips) do
+                    if string.find(k, self.config.center.key) then
+                        max_quips = max_quips + 1
+                    end
+                end
+                self:add_partner_speech_bubble(self.config.center.key.."_"..math.random(1, max_quips))
                 self:partner_say_stuff(5)
             return true end}))
         else
@@ -464,9 +470,15 @@ function Card:general_partner_speech(context)
         end
     end
     if context.partner_setting_blind and context.blind.boss and G.GAME.round_resets.ante == 8 then
-        if self.config.center.individual_quips > 0 then
+        if self.config.center.individual_quips then
             G.E_MANAGER:add_event(Event({func = function()
-                self:add_partner_speech_bubble(self.config.center.key.."_"..math.random(1, self.config.center.individual_quips))
+                local max_quips = 0
+                for k, v in pairs(G.localization.misc.quips) do
+                    if string.find(k, self.config.center.key) then
+                        max_quips = max_quips + 1
+                    end
+                end
+                self:add_partner_speech_bubble(self.config.center.key.."_"..math.random(1, max_quips))
                 self:partner_say_stuff(5)
             return true end}))
         else
@@ -585,7 +597,7 @@ Partner_API.Partner{
     pos = {x = 1, y = 0},
     loc_txt = {},
     atlas = "Partner",
-    individual_quips = 6,
+    individual_quips = true,
     config = {extra = {related_card = "j_mime", repetitions = 1}},
     loc_vars = function(self, info_queue, card)
         local benefits = 1
@@ -1025,7 +1037,7 @@ Partner_API.Partner{
     pos = {x = 0, y = 3},
     loc_txt = {},
     atlas = "Partner",
-    individual_quips = 6,
+    individual_quips = true,
     config = {extra = {related_card = "j_throwback", xmult = 1, xmult_mod = 0.5, cost = 2}},
     loc_vars = function(self, info_queue, card)
         local benefits = 1
