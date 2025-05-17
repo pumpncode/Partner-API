@@ -182,16 +182,9 @@ function Card:add_partner_speech_bubble(forced_key)
     self.children.speech_bubble:set_role{role_type = "Minor", xy_bond = "Strong", r_bond = "Weak", major = self}
     self.children.speech_bubble.states.visible = false
     local hold_time = (G.SETTINGS.GAMESPEED*4) or 4
-    G.E_MANAGER:add_event(Event({
-        trigger = 'after',
-        delay = hold_time,
-        blockable = false,
-        blocking = false,
-        func = function()
+    G.E_MANAGER:add_event(Event({trigger = "after", delay = hold_time, blockable = false, blocking = false, func = function()
         self:remove_partner_speech_bubble()
-        return true
-        end
-    }))
+    return true end}))
 end
 
 function G.UIDEF.partner_speech_bubble(forced_key)
@@ -436,9 +429,9 @@ function Card:click()
     Card_click_ref(self)
     if G.GAME.selected_partner_card and G.GAME.selected_partner_card == self and not G.GAME.partner_click_deal then
         if self.children.speech_bubble then
-        self:remove_partner_speech_bubble()
+            self:remove_partner_speech_bubble()
         else
-        G.GAME.selected_partner_card:calculate_partner({partner_click = true})
+            G.GAME.selected_partner_card:calculate_partner({partner_click = true})
         end
     end
 end
