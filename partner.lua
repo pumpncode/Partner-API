@@ -112,6 +112,7 @@ end
 Partner_API.config_tab = function()
     return {n=G.UIT.ROOT, config = {align = "cm", padding = 0.05, colour = G.C.CLEAR}, nodes={
         create_toggle({label = localize("k_enable_partner"), ref_table = Partner_API.config, ref_value = "enable_partner"}),
+	create_toggle({label = localize("k_enable_speech_bubble"), ref_table = Partner_API.config, ref_value = "enable_speech_bubble"}),
         create_toggle({label = localize("k_temporary_unlock_all"), ref_table = Partner_API.config, ref_value = "temporary_unlock_all"}),
     }}
 end
@@ -171,6 +172,7 @@ function create_UIBox_notify_alert(_achievement, _type)
 end
 
 function Card:add_partner_speech_bubble(forced_key)
+    if not Partner_API.config.enable_speech_bubble then return end
     if self.children.speech_bubble then self.children.speech_bubble:remove() end
     local align = nil
     if self.T.x+self.T.w/2 > G.ROOM.T.w/2 then align = "cl" end
@@ -203,6 +205,7 @@ function G.UIDEF.partner_speech_bubble(forced_key)
 end
 
 function Card:partner_say_stuff(n, not_first)
+    if not Partner_API.config.enable_speech_bubble then return end
     self.talking = true
     if not not_first then 
         G.E_MANAGER:add_event(Event({trigger = "after", delay = 0.1, func = function()
