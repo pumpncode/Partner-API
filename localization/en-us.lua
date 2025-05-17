@@ -232,6 +232,7 @@ return {
             b_partner_refuse="Refuse",
             k_partner="Partner",
             k_enable_partner="Enable Partner",
+            k_enable_speech_bubble="Enable Speech Bubble",
             k_temporary_unlock_all="Temporary Unlock All",
             ml_partner_unique_ability={
                 "Cards may enhance the abilities of",
