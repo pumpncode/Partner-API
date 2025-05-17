@@ -135,7 +135,7 @@ overwrite = false
 [[patches]]
 [patches.pattern]
 target = "functions/state_events.lua"
-pattern = '''if G.GAME.dollars >= 5 and not G.GAME.modifiers.no_interest then'''
+pattern = '''for _, area in ipairs(SMODS.get_card_areas('jokers')) do'''
 position = "before"
 payload = '''
     if G.GAME.selected_partner_card then
