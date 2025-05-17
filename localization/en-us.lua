@@ -219,8 +219,8 @@ return {
             partner_benefits={
                 name="Partner Benefits",
                 text={
-                    "Corresponding joker will",
-                    "{C:dark_edition}enhance{} partner ability",
+                    "Corresponding Joker",
+                    "will provide {C:dark_edition}benefits{}",
                 },
             },
         },
@@ -232,6 +232,7 @@ return {
             b_partner_refuse="Refuse",
             k_partner="Partner",
             k_enable_partner="Enable Partner",
+            k_temporary_unlock_all="Temporary Unlock All",
             ml_partner_unique_ability={
                 "Cards may enhance the abilities of",
                 "corresponding partners",
@@ -263,6 +264,47 @@ return {
                 "Brookling",
                 "Snowylight",
                 "Betmma",
+            },
+            pnr_partner_mime_1={
+                ":)"
+            },
+            pnr_partner_mime_2={
+                ":D"
+            },
+            pnr_partner_mime_3={
+                ":P"
+            },
+            pnr_partner_mime_4={
+                ":I"
+            },
+            pnr_partner_mime_5={
+                "XD"
+            },
+            pnr_partner_mime_6={
+                ":l"
+            },
+            pnr_partner_throwback_1={
+                "Cool Beans"
+            },
+            pnr_partner_throwback_2={
+                "Remember, if there's a blind", 
+                "you're not digging the vibe of:",
+                "SAY NO AND SKIP!"
+            },
+            pnr_partner_throwback_3={
+                "Totally Tubular!"
+            },
+            pnr_partner_throwback_4={
+                "Gnarly!"
+            },
+            pnr_partner_throwback_5={
+                "Let's make some",
+                "bodacious plays!"
+            },
+            pnr_partner_throwback_6={
+                "Hey-yo!", 
+                "Freshest partner in town,",
+                "reporting for duty!"
             },
         },
     },
