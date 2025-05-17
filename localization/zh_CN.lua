@@ -224,6 +224,7 @@ return {
             b_partner_refuse="无伙伴模式",
             k_partner="伙伴",
             k_enable_partner="启用伙伴",
+            k_enable_speech_bubble="启用对话气泡",
             k_temporary_unlock_all="临时解锁全部",
             ml_partner_unique_ability={
                 "小丑可能会强化",
