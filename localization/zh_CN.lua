@@ -221,7 +221,8 @@ return {
         dictionary={
             b_partners="伙伴",
             b_partner_agree="选择伙伴",
-            b_partner_refuse="无伙伴模式",
+            b_partner_random="随机伙伴",
+            b_partner_skip="忽略伙伴",
             k_partner="伙伴",
             k_enable_partner="启用伙伴",
             k_enable_speech_bubble="启用对话气泡",
