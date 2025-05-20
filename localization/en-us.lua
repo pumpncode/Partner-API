@@ -229,7 +229,8 @@ return {
         dictionary={
             b_partners="Partners",
             b_partner_agree="Accept",
-            b_partner_refuse="Refuse",
+            b_partner_random="Random",
+            b_partner_skip="Skip",
             k_partner="Partner",
             k_enable_partner="Enable Partner",
             k_enable_speech_bubble="Enable Speech Bubble",
