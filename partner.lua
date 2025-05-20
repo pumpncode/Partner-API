@@ -20,13 +20,21 @@ Partner_API.Partner = SMODS.Center:extend{
     generate_ui = function(self, info_queue, card, desc_nodes, specific_vars, full_UI_table)
         SMODS.Center.generate_ui(self, info_queue, card, desc_nodes, specific_vars, full_UI_table)
         if self.config.extra.related_card then
-            local link_key = self.config.extra.related_card
-            if link_key and next(SMODS.find_card(link_key)) then
-                info_queue[#info_queue+1] = {key = "partner_benefits", set = "Other"}
-                --local main_end = {}
-                --localize{type = "other", key = "partner_benefits", nodes = main_end}
-                --main_end = main_end[1]
-                --desc_nodes[#desc_nodes+1] = main_end
+            if type(self.config.extra.related_card) == "table" then
+                for k, v in pairs(self.config.extra.related_card) do
+                    if next(SMODS.find_card(v)) then
+                        info_queue[#info_queue+1] = {key = "partner_benefits", set = "Other"}
+                        break
+                    end
+                end
+            else
+                if next(SMODS.find_card(self.config.extra.related_card)) then
+                    info_queue[#info_queue+1] = {key = "partner_benefits", set = "Other"}
+                    --local main_end = {}
+                    --localize{type = "other", key = "partner_benefits", nodes = main_end}
+                    --main_end = main_end[1]
+                    --desc_nodes[#desc_nodes+1] = main_end
+                end
             end
         end
     end
@@ -255,66 +263,122 @@ G.FUNCS.run_setup_partners_option = function(e)
 end
 
 function create_UIBox_partners_option()
-    local partner_pool = G.P_CENTER_POOLS["Partner"]
     G.GAME.viewed_partner = G.P_CENTER_POOLS["Partner"][G.PROFILES[G.SETTINGS.profile].MEMORY.partner] or G.P_CENTER_POOLS["Partner"][1]
-    G.partner_area = CardArea(G.ROOM.T.x, G.ROOM.T.h, G.CARD_W, G.CARD_H, {card_limit = 1, type = "title", highlight_limit = 0})
+    local partner_selection, partner_selection_cycle = create_partner_selection()
+    G.partner_area = CardArea(G.ROOM.T.x, G.ROOM.T.h, G.CARD_W*46/71, G.CARD_H*58/95, {card_limit = 2, type = "title", highlight_limit = 0})
     local center = G.GAME.viewed_partner
     local card = Card(G.partner_area.T.x+G.partner_area.T.w/2-G.CARD_W*23/71, G.partner_area.T.y+G.partner_area.T.h/2-G.CARD_H*29/95, G.CARD_W*46/71, G.CARD_H*58/95, G.P_CARDS.empty, center)
     local UI_table = G.GAME.viewed_partner:is_unlocked() and generate_card_ui(G.GAME.viewed_partner, nil, nil, "Partner") or generate_card_ui(G.GAME.viewed_partner, nil, nil, "Locked")
-    local partner_main = {n=G.UIT.ROOT, config={align = "cm", minw = 3.5, minh = 1.75, id = G.GAME.viewed_partner.name, colour = G.C.CLEAR}, nodes={desc_from_rows(UI_table.main, true, 3.5)}}
+    local partner_main = {n=G.UIT.ROOT, config={align = "cm", minw = 3, minh = 2, id = G.GAME.viewed_partner.name, colour = G.C.CLEAR}, nodes={desc_from_rows(UI_table.main, true)}}
     --card.sticker = get_joker_win_sticker(center)
     card.states.hover.can = false
     G.partner_area:emplace(card)
-    local ordered_names, viewed_partner = {}, 1
-    for k, v in ipairs(partner_pool) do
-        ordered_names[#ordered_names+1] = v.name
-        if v.name == G.GAME.viewed_partner.name then
-            viewed_partner = k
-        end
-    end
     local t = create_UIBox_generic_options({no_back = true, contents = {
-        create_option_cycle({options = ordered_names, opt_callback = "change_viewed_partner", current_option = viewed_partner, colour = G.C.RED, w = 4.5, focus_args = {snap_to = true}, mid = 
-            {n=G.UIT.R, config={align = "cm", minw = 2.5, padding = 0.1, r = 0.1, colour = G.C.BLACK, emboss = 0.05}, nodes={
-                {n=G.UIT.R, config={align = "cm", padding = 0.2, colour = G.C.BLACK, r = 0.2}, nodes={
-                    {n=G.UIT.C, config={align = "cm", padding = 0}, nodes={
-                        {n=G.UIT.O, config={object = G.partner_area}}
-                    }},
-                    {n=G.UIT.C, config={align = "tm", minw = 3.7, minh = 2.1, r = 0.1, colour = G.C.L_BLACK, padding = 0.1}, nodes={
-                        {n=G.UIT.R, config={align = "cm", emboss = 0.1, r = 0.1, minw = 4, maxw = 4, minh = 0.6}, nodes={
-                            {n=G.UIT.O, config={id = nil, func = "RUN_SETUP_check_partner_name", object = Moveable()}},
-                        }},
-                        {n=G.UIT.R, config={align = "cm", colour = G.C.WHITE, emboss = 0.1, minh = 2.2, r = 0.1}, nodes={
-                            {n=G.UIT.O, config={id = G.GAME.viewed_partner.name, func = "RUN_SETUP_check_partner", object = UIBox{definition = partner_main, config = {offset = {x=0,y=0}}}}}
-                        }}
-                    }},
-                }},
-            }}
-        }),
-        {n=G.UIT.R, config={align = "cm", padding = 0}, nodes={
-            {n=G.UIT.C, config={align = "cm"}, nodes={
-                UIBox_button{label = {localize("b_partner_refuse")}, button = "refuse_partner", colour = G.C.FILTER, minw = 4, minh = 0.8, scale = 0.5},
+        {n=G.UIT.R, config={align = "cm", minw = 2.5, padding = 0.15, r = 0.1, colour = G.C.L_BLACK}, nodes={
+            {n=G.UIT.C, config={align = "cm", padding = 0}, nodes={
+                partner_selection,
+                partner_selection_cycle
             }},
-            {n=G.UIT.C, config={align = "cm", minw = 0.45}, nodes={}},
-            {n=G.UIT.C, config={align = "cm"}, nodes={
-                UIBox_button{label = {localize("b_partner_agree")}, button = "select_partner", func = "select_partner_button", minw = 4, minh = 0.8, scale = 0.5},
+            {n=G.UIT.C, config={align = "tm", minw = 3, minh = 1, r = 0.1, colour = G.C.BLACK, padding = 0.15, emboss = 0.05}, nodes={
+                {n=G.UIT.R, config={align = "cm", emboss = 0.1, r = 0.1, minw = 2, minh = 0.5}, nodes={
+                    {n=G.UIT.O, config={id = nil, func = "RUN_SETUP_check_partner_name", object = Moveable()}},
+                }},
+                {n=G.UIT.R, config={align = "cm", padding = 0}, nodes={
+                    {n=G.UIT.O, config={id = G.GAME.viewed_partner.name, func = "RUN_SETUP_check_partner_card", object = G.partner_area}},
+                }},
+                {n=G.UIT.R, config={align = "cm", colour = G.C.WHITE, emboss = 0.1, r = 0.1}, nodes={
+                    {n=G.UIT.O, config={id = G.GAME.viewed_partner.name, func = "RUN_SETUP_check_partner", object = UIBox{definition = partner_main, config = {offset = {x=0,y=0}}}}}
+                }}
+            }},
+        }},
+        {n=G.UIT.R, config={align = "cm", padding = 0}, nodes={
+            {n=G.UIT.C, config={minw = 2.72, minh = 0.8, r = 0.1, hover = true, button = "skip_partner", colour = G.C.FILTER, align = "cm", emboss = 0.1}, nodes={
+                {n=G.UIT.R, config={align = "cm"}, nodes={
+                    {n=G.UIT.T, config={text = localize("b_partner_skip"), scale = 0.5, colour = G.C.WHITE}}
+                }},
+            }},
+            {n=G.UIT.C, config={align = "cm", minw = 0.2}, nodes={}},
+            {n=G.UIT.C, config={minw = 2.72, minh = 0.8, r = 0.1, hover = true, button = "random_partner", colour = G.C.BLUE, align = "cm", emboss = 0.1}, nodes={
+                {n=G.UIT.R, config={align = "cm"}, nodes={
+                    {n=G.UIT.T, config={text = localize("b_partner_random"), scale = 0.5, colour = G.C.WHITE}}
+                }},
+            }},
+            {n=G.UIT.C, config={align = "cm", minw = 0.2}, nodes={}},
+            {n=G.UIT.C, config={minw = 3.33, minh = 0.8, r = 0.1, hover = true, button = "select_partner", func = "select_partner_button", align = "cm", emboss = 0.1}, nodes={
+                {n=G.UIT.R, config={align = "cm"}, nodes={
+                    {n=G.UIT.T, config={text = localize("b_partner_agree"), scale = 0.5, colour = G.C.WHITE}}
+                }},
             }},
         }},
     }})
     return t
 end
 
-G.FUNCS.change_viewed_partner = function(args)
+function create_partner_selection()
+    local partner_tables = {}
+    G.partner_selection = {}
+    for i = 1, 2 do
+        local row = {n=G.UIT.R, config={colour = G.C.LIGHT}, nodes={}}
+        for j = 1, 4 do
+            G.partner_selection[j+(i-1)*4] = CardArea(G.ROOM.T.x, G.ROOM.T.h, G.CARD_W*46/71, G.CARD_H*58/95, {card_limit = 2, type = "title", highlight_limit = 0})
+            table.insert(row.nodes, {n=G.UIT.O, config={object = G.partner_selection[j+(i-1)*4]}})
+        end
+        table.insert(partner_tables, row)
+    end
+    local partner_options = {}
+    for i = 1, math.ceil(#G.P_CENTER_POOLS["Partner"]/(#G.partner_selection)) do
+        table.insert(partner_options, localize("k_page").." "..tostring(i).."/"..tostring(math.ceil(#G.P_CENTER_POOLS["Partner"]/(#G.partner_selection))))
+    end
+    local viewed_partner = 1
+    for k, v in pairs(G.P_CENTER_POOLS["Partner"]) do
+        if v.name == G.GAME.viewed_partner.name then
+            viewed_partner = math.ceil(k/(#G.partner_selection))
+            break
+        end
+    end
+    for i = 1, #G.partner_selection do
+        local center = G.P_CENTER_POOLS["Partner"][i+(#G.partner_selection*(viewed_partner-1))]
+        if not center then break end
+        local card = Card(G.partner_selection[i].T.x+G.partner_selection[i].T.w/2-G.CARD_W*23/71, G.partner_selection[i].T.y+G.partner_selection[i].T.h/2-G.CARD_H*29/95, G.CARD_W*46/71, G.CARD_H*58/95, empty, center)
+        card.no_ui = true; card.config.card.no_ui = true
+        G.partner_selection[i]:emplace(card)
+    end
+    local t, tt = {n=G.UIT.R, config={align = "cm", r = 0.1, minh = 3.6, colour = G.C.BLACK, emboss = 0.05}, nodes=partner_tables},
+    {n=G.UIT.R, config={align = "cm"}, nodes={
+        create_option_cycle({options = partner_options, w = 2.5, cycle_shoulders = true, opt_callback = "your_selection_partner_page", current_option = viewed_partner, colour = G.C.RED, no_pips = true, focus_args = {snap_to = true, nav = "wide"}})
+    }}
+    return t, tt
+end
+
+G.FUNCS.your_selection_partner_page = function(args)
     if not args or not args.cycle_config then return end
-    local c = G.partner_area:remove_card(G.partner_area.cards[1])
-    c:remove()
-    c = nil
-    local center = G.P_CENTER_POOLS["Partner"][args.cycle_config.current_option]
-    local card = Card(G.partner_area.T.x+G.partner_area.T.w/2-G.CARD_W*23/71, G.partner_area.T.y+G.partner_area.T.h/2-G.CARD_H*29/95, G.CARD_W*46/71, G.CARD_H*58/95, G.P_CARDS.empty, center)
-    --card.sticker = get_joker_win_sticker(center)
-    card.states.hover.can = false
-    G.partner_area:emplace(card)
-    G.GAME.viewed_partner = center
-    G.PROFILES[G.SETTINGS.profile].MEMORY.partner = args.cycle_config.current_option
+    for j = 1, #G.partner_selection do
+        for i = #G.partner_selection[j].cards, 1, -1 do
+            local c = G.partner_selection[j]:remove_card(G.partner_selection[j].cards[i])
+            c:remove()
+            c = nil
+        end
+    end
+    for j = 1, #G.partner_selection do
+        local center = G.P_CENTER_POOLS["Partner"][j+(#G.partner_selection*(args.cycle_config.current_option-1))]
+        if not center then break end
+        local card = Card(G.partner_selection[j].T.x+G.partner_selection[j].T.w/2-G.CARD_W*23/71, G.partner_selection[j].T.y+G.partner_selection[j].T.h/2-G.CARD_H*29/95, G.CARD_W*46/71, G.CARD_H*58/95, G.P_CARDS.empty, center)
+        card.no_ui = true; card.config.card.no_ui = true
+        G.partner_selection[j]:emplace(card)
+    end
+end
+
+G.FUNCS.RUN_SETUP_check_partner_card = function(e)
+    if e.config.object and G.GAME.viewed_partner.name ~= e.config.id then
+        local c = G.partner_area:remove_card(G.partner_area.cards[1])
+        c:remove()
+        c = nil
+        local center = G.GAME.viewed_partner
+        local card = Card(G.partner_area.T.x+G.partner_area.T.w/2-G.CARD_W*23/71, G.partner_area.T.y+G.partner_area.T.h/2-G.CARD_H*29/95, G.CARD_W*46/71, G.CARD_H*58/95, G.P_CARDS.empty, center)
+        card.states.hover.can = false
+        G.partner_area:emplace(card)
+        e.config.id = G.GAME.viewed_partner.name
+    end
 end
 
 G.FUNCS.RUN_SETUP_check_partner_name = function(e)
@@ -334,7 +398,7 @@ end
 G.FUNCS.RUN_SETUP_check_partner = function(e)
     if G.GAME.viewed_partner.name ~= e.config.id then
         local UI_table = G.GAME.viewed_partner:is_unlocked() and generate_card_ui(G.GAME.viewed_partner, nil, nil, "Partner") or generate_card_ui(G.GAME.viewed_partner, nil, nil, "Locked")
-        local partner_main = {n=G.UIT.ROOT, config={align = "cm", minw = 3.5, minh = 1.75, id = G.GAME.viewed_partner.name, colour = G.C.CLEAR}, nodes={desc_from_rows(UI_table.main, true, 3.5)}}
+        local partner_main = {n=G.UIT.ROOT, config={align = "cm", minw = 3, minh = 2, id = G.GAME.viewed_partner.name, colour = G.C.CLEAR}, nodes={desc_from_rows(UI_table.main, true)}}
         e.config.object:remove() 
         e.config.object = UIBox{
             definition = partner_main,
@@ -344,9 +408,19 @@ G.FUNCS.RUN_SETUP_check_partner = function(e)
     end
 end
 
-G.FUNCS.refuse_partner = function()
+G.FUNCS.skip_partner = function()
     G.FUNCS.exit_overlay_menu()
-    G.GAME.refuse_partner = true
+    G.GAME.skip_partner = true
+end
+
+G.FUNCS.random_partner = function()
+    local center = pseudorandom_element(G.P_CENTER_POOLS["Partner"], pseudoseed(os.time()))
+    G.GAME.viewed_partner = center
+    for k, v in pairs(G.P_CENTER_POOLS["Partner"]) do
+        if v == G.GAME.viewed_partner then
+            G.PROFILES[G.SETTINGS.profile].MEMORY.partner = k
+        end
+    end
 end
 
 G.FUNCS.select_partner_button = function(e)
@@ -363,20 +437,20 @@ G.FUNCS.select_partner = function()
     G.FUNCS.exit_overlay_menu()
     G.E_MANAGER:add_event(Event({func = function()
         G.GAME.selected_partner = G.GAME.viewed_partner.key
-        G.GAME.selected_partner_card = Card(G.deck.T.x+G.deck.T.w-G.CARD_W*0.6, G.deck.T.y-G.CARD_H*0.8, G.CARD_W*46/71, G.CARD_H*58/95, G.P_CARDS.empty, G.GAME.viewed_partner)
+        G.GAME.selected_partner_card = Card(G.deck.T.x+G.deck.T.w-G.CARD_W*0.6, G.deck.T.y-G.CARD_H*1.6, G.CARD_W*46/71, G.CARD_H*58/95, G.P_CARDS.empty, G.GAME.viewed_partner)
         G.GAME.selected_partner_card:juice_up(0.3, 0.5)
     return true end}))
 end
 
 local run_setup_option_ref = G.UIDEF.run_setup_option
 function G.UIDEF.run_setup_option(type)
-	local t = run_setup_option_ref(type)
-	if type == "New Run" then
+    local t = run_setup_option_ref(type)
+    if type == "New Run" then
         t.nodes[#t.nodes].nodes[#t.nodes[#t.nodes].nodes] = {n=G.UIT.C, config={align = "cm", minw = 2.4}, nodes={
             type == "New Run" and create_toggle{col = true, label = localize("k_partner"), label_scale = 0.28, w = 0, scale = 0.7, ref_table = Partner_API.config, ref_value = "enable_partner"} or nil
         }}
-	end
-	return t
+    end
+    return t
 end
 
 -- Galdur Compat
@@ -392,7 +466,7 @@ end
 local Game_start_run_ref = Game.start_run
 function Game:start_run(args)
     Game_start_run_ref(self, args)
-    if not G.GAME.selected_partner and not G.GAME.refuse_partner and Partner_API.config.enable_partner then
+    if not G.GAME.selected_partner and not G.GAME.skip_partner and Partner_API.config.enable_partner then
         G.E_MANAGER:add_event(Event({func = function()
             G.FUNCS.run_setup_partners_option()
         return true end}))
@@ -402,7 +476,7 @@ function Game:start_run(args)
             for k, v in pairs(G.P_CENTER_POOLS["Partner"]) do
                 if v.key == G.GAME.selected_partner then center = v end
             end
-            G.GAME.selected_partner_card = Card(G.deck.T.x+G.deck.T.w-G.CARD_W*0.6, G.deck.T.y-G.CARD_H*0.8, G.CARD_W*46/71, G.CARD_H*58/95, G.P_CARDS.empty, center)
+            G.GAME.selected_partner_card = Card(G.deck.T.x+G.deck.T.w-G.CARD_W*0.6, G.deck.T.y-G.CARD_H*1.6, G.CARD_W*46/71, G.CARD_H*58/95, G.P_CARDS.empty, center)
             G.GAME.selected_partner_card:juice_up(0.3, 0.5)
             if G.GAME.selected_partner_table then
                 for k, v in pairs(G.GAME.selected_partner_table) do
@@ -430,6 +504,14 @@ end
 local Card_click_ref = Card.click
 function Card:click()
     Card_click_ref(self)
+    if self.ability.set == "Partner" and self.area and self.area.config.type == "title" then
+        G.GAME.viewed_partner = self.config.center
+        for k, v in pairs(G.P_CENTER_POOLS["Partner"]) do
+            if v == G.GAME.viewed_partner then
+                G.PROFILES[G.SETTINGS.profile].MEMORY.partner = k
+            end
+        end
+    end
     if G.GAME.selected_partner_card and G.GAME.selected_partner_card == self and not G.GAME.partner_click_deal then
         if self.children.speech_bubble then
             self:remove_partner_speech_bubble()
