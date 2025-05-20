@@ -1,5 +1,5 @@
 [manifest]
-version = "1.0.1h"
+version = "1.0.2"
 dump_lua = true
 priority = 0
 
@@ -279,6 +279,24 @@ payload = '''
 
     if G.GAME.selected_partner_card then
       local ret = G.GAME.selected_partner_card:calculate_partner({partner_skipping_booster = true, booster = booster_obj})
+      if ret then
+        SMODS.trigger_effects({{individual = ret}}, G.GAME.selected_partner_card)
+      end
+    end
+
+'''
+match_indent = false
+overwrite = false
+
+[[patches]]
+[patches.pattern]
+target = "functions/button_callbacks.lua"
+pattern = '''SMODS.calculate_context({selling_card = true, card = card})'''
+position = "before"
+payload = '''
+
+    if G.GAME.selected_partner_card then
+      local ret = G.GAME.selected_partner_card:calculate_partner({partner_selling_card = true, card = card})
       if ret then
         SMODS.trigger_effects({{individual = ret}}, G.GAME.selected_partner_card)
       end
