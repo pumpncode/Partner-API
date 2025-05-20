@@ -136,7 +136,7 @@ end
 
 local generate_card_ui_ref = generate_card_ui
 function generate_card_ui(_c, full_UI_table, specific_vars, card_type, badges, hide_desc, main_start, main_end, card)
-    if _c and _c.set == "Partner" and _c:is_unlocked() and card_type and card_type == "Locked" then card_type = "Partner" end
+    if _c and _c.set == "Partner" and _c:is_unlocked() and card_type and card_type == "Locked" and (specific_vars and not specific_vars.no_name or not specific_vars) then card_type = "Partner" end
     if _c and _c.set == "Partner" and _c:is_unlocked() and badges then badges.card_type = "Partner" end
     return generate_card_ui_ref(_c, full_UI_table, specific_vars, card_type, badges, hide_desc, main_start, main_end, card)
 end
