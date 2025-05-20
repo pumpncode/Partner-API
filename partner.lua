@@ -268,8 +268,9 @@ function create_UIBox_partners_option()
     G.partner_area = CardArea(G.ROOM.T.x, G.ROOM.T.h, G.CARD_W*46/71, G.CARD_H*58/95, {card_limit = 2, type = "title", highlight_limit = 0})
     local center = G.GAME.viewed_partner
     local card = Card(G.partner_area.T.x+G.partner_area.T.w/2-G.CARD_W*23/71, G.partner_area.T.y+G.partner_area.T.h/2-G.CARD_H*29/95, G.CARD_W*46/71, G.CARD_H*58/95, G.P_CARDS.empty, center)
+    local minw = 3
     local UI_table = G.GAME.viewed_partner:is_unlocked() and generate_card_ui(G.GAME.viewed_partner, nil, nil, "Partner") or generate_card_ui(G.GAME.viewed_partner, nil, nil, "Locked")
-    local partner_main = {n=G.UIT.ROOT, config={align = "cm", minw = 3, minh = 2, id = G.GAME.viewed_partner.name, colour = G.C.CLEAR}, nodes={desc_from_rows(UI_table.main, true)}}
+    local partner_main = {n=G.UIT.ROOT, config={align = "cm", minw = minw, minh = 2, id = G.GAME.viewed_partner.name, colour = G.C.CLEAR}, nodes={desc_from_rows(UI_table.main, true, minw-0.2)}}
     --card.sticker = get_joker_win_sticker(center)
     card.states.hover.can = false
     G.partner_area:emplace(card)
@@ -397,8 +398,9 @@ end
 
 G.FUNCS.RUN_SETUP_check_partner = function(e)
     if G.GAME.viewed_partner.name ~= e.config.id then
+	local minw = 3
         local UI_table = G.GAME.viewed_partner:is_unlocked() and generate_card_ui(G.GAME.viewed_partner, nil, nil, "Partner") or generate_card_ui(G.GAME.viewed_partner, nil, nil, "Locked")
-        local partner_main = {n=G.UIT.ROOT, config={align = "cm", minw = 3, minh = 2, id = G.GAME.viewed_partner.name, colour = G.C.CLEAR}, nodes={desc_from_rows(UI_table.main, true)}}
+        local partner_main = {n=G.UIT.ROOT, config={align = "cm", minw = minw, minh = 2, id = G.GAME.viewed_partner.name, colour = G.C.CLEAR}, nodes={desc_from_rows(UI_table.main, true, minw-0.2)}}
         e.config.object:remove() 
         e.config.object = UIBox{
             definition = partner_main,
