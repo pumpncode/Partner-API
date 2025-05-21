@@ -591,23 +591,32 @@ function Card:click()
             end
         end
     end
-    if G.GAME.selected_partner_card and G.GAME.selected_partner_card == self and not G.GAME.partner_click_deal then
+    if G.GAME.selected_partner_card and G.GAME.selected_partner_card == self then
         if self.children.speech_bubble then
             self:remove_partner_speech_bubble()
-        else
+        elseif not G.GAME.partner_click_deal then
+            G.GAME.partner_click_deal = true
             local ret = G.GAME.selected_partner_card:calculate_partner({partner_click = true})
-	    if ret then
+            if ret then
                 SMODS.trigger_effects({{individual = ret}}, G.GAME.selected_partner_card)
             end
+            G.E_MANAGER:add_event(Event({func = function()
+                G.GAME.partner_click_deal = nil
+            return true end}))
         end
     end
 end
 
 function Card:partner_R_click()
-    if G.GAME.selected_partner_card and G.GAME.selected_partner_card == self and not G.GAME.partner_R_click_deal then
-        local ret = G.GAME.selected_partner_card:calculate_partner({partner_R_click = true})
-        if ret then
-            SMODS.trigger_effects({{individual = ret}}, G.GAME.selected_partner_card)
+    if G.GAME.selected_partner_card and G.GAME.selected_partner_card == self then
+        if not G.GAME.partner_R_click_deal then
+            local ret = G.GAME.selected_partner_card:calculate_partner({partner_R_click = true})
+            if ret then
+                SMODS.trigger_effects({{individual = ret}}, G.GAME.selected_partner_card)
+            end
+            G.E_MANAGER:add_event(Event({func = function()
+                G.GAME.partner_R_click_deal = nil
+            return true end}))
         end
     end
 end
