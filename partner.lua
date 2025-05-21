@@ -610,6 +610,7 @@ end
 function Card:partner_R_click()
     if G.GAME.selected_partner_card and G.GAME.selected_partner_card == self then
         if not G.GAME.partner_R_click_deal then
+	    G.GAME.partner_R_click_deal = true
             local ret = G.GAME.selected_partner_card:calculate_partner({partner_R_click = true})
             if ret then
                 SMODS.trigger_effects({{individual = ret}}, G.GAME.selected_partner_card)
