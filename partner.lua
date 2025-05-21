@@ -490,6 +490,74 @@ function Game:start_run(args)
     end
 end
 
+-- Controller Page
+
+local Controller_queue_R_cursor_press_ref = Controller.queue_R_cursor_press
+function Controller:queue_R_cursor_press(x, y)
+    Controller_queue_R_cursor_press_ref(self, x, y)
+    if self.locks.frame then return end
+    self.partner_R_cursor_queue = {x = x, y = y}
+end
+
+local Controller_update_ref = Controller.update
+function Controller:update(dt)
+    Controller_update_ref(self, dt)
+    if self.partner_R_cursor_queue then 
+        self:partner_R_cursor_press(self.partner_R_cursor_queue.x, self.partner_R_cursor_queue.y)
+        self.partner_R_cursor_queue = nil
+    end
+    if not self.cursor_up.partner_R_handled then
+        if self.cursor_down.partner_R_target then 
+            if (not self.cursor_down.partner_R_target.click_timeout or self.cursor_down.partner_R_target.click_timeout*G.SPEEDFACTOR > self.cursor_up.partner_R_time - self.cursor_down.partner_R_time) then
+                if Vector_Dist(self.cursor_down.partner_R_T, self.cursor_up.partner_R_T) < G.MIN_CLICK_DIST then 
+                    if self.cursor_down.partner_R_target.states.click.can then
+                        self.clicked.partner_R_target = self.cursor_down.partner_R_target
+                        self.clicked.partner_R_handled = false
+                    end
+                end
+            end
+        end
+        self.cursor_up.partner_R_handled = true
+    end
+    if not self.clicked.partner_R_handled then
+        if self.clicked.partner_R_target then
+            self.clicked.partner_R_target:partner_R_click()
+            self.clicked.partner_R_handled = true
+        end
+    end
+end
+
+function Controller:partner_R_cursor_press(x, y)
+    if ((self.locked) and (not G.SETTINGS.paused or G.screenwipe)) or (self.locks.frame) then return end
+    local x = x or self.cursor_position.x
+    local y = y or self.cursor_position.y
+    self.cursor_down.partner_R_T = {x = x/(G.TILESCALE*G.TILESIZE), y = y/(G.TILESCALE*G.TILESIZE)}
+    self.cursor_down.partner_R_time = G.TIMERS.TOTAL
+    self.cursor_down.partner_R_target = nil
+    local press_node = (self.HID.touch and self.cursor_hover.target) or self.hovering.target or self.focused.target
+    if press_node then 
+        self.cursor_down.partner_R_target = press_node.states.click.can and press_node or press_node:can_drag() or nil
+    end
+    if self.cursor_down.partner_R_target == nil then
+        self.cursor_down.partner_R_target = G.ROOM
+    end
+end
+
+local love_mousereleased_ref = love.mousereleased
+function love.mousereleased(x, y, button)
+    love_mousereleased_ref(x, y, button)
+    if button == 2 then G.CONTROLLER:partner_R_cursor_release(x, y) end
+end
+
+function Controller:partner_R_cursor_release(x, y)
+    if ((self.locked) and (not G.SETTINGS.paused or G.screenwipe)) or (self.locks.frame) then return end
+    local x = x or self.cursor_position.x
+    local y = y or self.cursor_position.y
+    self.cursor_up.partner_R_T = {x = x/(G.TILESCALE*G.TILESIZE), y = y/(G.TILESCALE*G.TILESIZE)}
+    self.cursor_up.partner_R_time = G.TIMERS.TOTAL
+    self.cursor_up.partner_R_handled = false
+end
+
 -- Hook Page
 
 local save_run_ref = save_run
@@ -518,7 +586,19 @@ function Card:click()
         if self.children.speech_bubble then
             self:remove_partner_speech_bubble()
         else
-            G.GAME.selected_partner_card:calculate_partner({partner_click = true})
+            local ret = G.GAME.selected_partner_card:calculate_partner({partner_click = true})
+	    if ret then
+                SMODS.trigger_effects({{individual = ret}}, G.GAME.selected_partner_card)
+            end
+        end
+    end
+end
+
+function Card:partner_R_click()
+    if G.GAME.selected_partner_card and G.GAME.selected_partner_card == self and not G.GAME.partner_R_click_deal then
+        local ret = G.GAME.selected_partner_card:calculate_partner({partner_R_click = true})
+        if ret then
+            SMODS.trigger_effects({{individual = ret}}, G.GAME.selected_partner_card)
         end
     end
 end
