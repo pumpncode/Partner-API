@@ -549,6 +549,15 @@ function love.mousereleased(x, y, button)
     if button == 2 then G.CONTROLLER:partner_R_cursor_release(x, y) end
 end
 
+local Controller_button_release_update_ref = Controller.button_release_update
+function Controller:button_release_update(button, dt)
+    Controller_button_release_update_ref(self, button, dt)
+    if not self.held_button_times[button] then return end
+    if button == "b" then
+        self:partner_R_cursor_release()
+    end
+end
+
 function Controller:partner_R_cursor_release(x, y)
     if ((self.locked) and (not G.SETTINGS.paused or G.screenwipe)) or (self.locks.frame) then return end
     local x = x or self.cursor_position.x
