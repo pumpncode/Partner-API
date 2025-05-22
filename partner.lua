@@ -567,6 +567,8 @@ function Controller:partner_R_cursor_release(x, y)
     self.cursor_up.partner_R_handled = false
 end
 
+function Node:partner_R_click() end
+
 -- Hook Page
 
 local save_run_ref = save_run
