@@ -27,13 +27,21 @@ Partner_API.Partner = SMODS.Center:extend{
                         break
                     end
                 end
+                for k, v in pairs(self.config.extra.related_card) do
+                    if next(SMODS.find_card(v)) then
+                        local main_end = {{n=G.UIT.C, config={align = "bm"}, nodes={
+                            {n=G.UIT.O, config={object = DynaText({string = {"<"..localize{type = "name_text", set = G.P_CENTERS[v].set, key = v}.." "..localize("k_benefit")..">"}, colours = {G.C.DARK_EDITION}, float = true, scale = 0.3})}},
+                        }}}
+                        desc_nodes[#desc_nodes+1] = main_end
+                    end
+                end
             else
                 if next(SMODS.find_card(self.config.extra.related_card)) then
                     info_queue[#info_queue+1] = {key = "partner_benefits", set = "Other"}
-                    --local main_end = {}
-                    --localize{type = "other", key = "partner_benefits", nodes = main_end}
-                    --main_end = main_end[1]
-                    --desc_nodes[#desc_nodes+1] = main_end
+                    local main_end = {{n=G.UIT.C, config={align = "bm"}, nodes={
+                        {n=G.UIT.O, config={object = DynaText({string = {"<"..localize{type = "name_text", set = G.P_CENTERS[self.config.extra.related_card].set, key = self.config.extra.related_card}.." "..localize("k_benefit")..">"}, colours = {G.C.DARK_EDITION}, float = true, scale = 0.3})}},
+                    }}}
+                    desc_nodes[#desc_nodes+1] = main_end
                 end
             end
         end
