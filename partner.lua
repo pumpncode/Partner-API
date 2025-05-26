@@ -83,6 +83,7 @@ function create_UIBox_your_collection_partners()
     for i = 1, 4 do
         for j = 1, #G.your_collection do
             local center = G.P_CENTER_POOLS["Partner"][i+(j-1)*4]
+	    if not center then break end
             local card = Card(G.your_collection[j].T.x+G.your_collection[j].T.w/2, G.your_collection[j].T.y, G.CARD_W*46/71, G.CARD_H*58/95, nil, center)
             --card.sticker = get_joker_win_sticker(center)
             G.your_collection[j]:emplace(card)
