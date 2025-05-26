@@ -351,6 +351,7 @@ function create_partner_selection()
         if not center then break end
         local card = Card(G.partner_selection[i].T.x+G.partner_selection[i].T.w/2-G.CARD_W*23/71, G.partner_selection[i].T.y+G.partner_selection[i].T.h/2-G.CARD_H*29/95, G.CARD_W*46/71, G.CARD_H*58/95, empty, center)
         card.no_ui = true; card.config.card.no_ui = true
+	card.ability.fake_partner = true
         G.partner_selection[i]:emplace(card)
     end
     local t, tt = {n=G.UIT.R, config={align = "cm", r = 0.1, minh = 3.6, colour = G.C.BLACK, emboss = 0.05}, nodes=partner_tables},
@@ -374,6 +375,7 @@ G.FUNCS.your_selection_partner_page = function(args)
         if not center then break end
         local card = Card(G.partner_selection[j].T.x+G.partner_selection[j].T.w/2-G.CARD_W*23/71, G.partner_selection[j].T.y+G.partner_selection[j].T.h/2-G.CARD_H*29/95, G.CARD_W*46/71, G.CARD_H*58/95, G.P_CARDS.empty, center)
         card.no_ui = true; card.config.card.no_ui = true
+	card.ability.fake_partner = true
         G.partner_selection[j]:emplace(card)
     end
 end
@@ -594,7 +596,7 @@ end
 local Card_click_ref = Card.click
 function Card:click()
     Card_click_ref(self)
-    if self.ability.set == "Partner" and self.area and self.area.config.type == "title" then
+    if self.ability.set == "Partner" and self.ability.fake_partner then
         G.GAME.viewed_partner = self.config.center
         for k, v in pairs(G.P_CENTER_POOLS["Partner"]) do
             if v == G.GAME.viewed_partner then
