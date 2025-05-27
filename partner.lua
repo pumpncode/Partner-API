@@ -15,7 +15,17 @@ Partner_API.Partner = SMODS.Center:extend{
         G.P_CENTER_POOLS[self.set] = {}
     end,
     set_card_type_badge = function(self, card, badges)
-        badges[#badges+1] = create_badge(localize("k_partner"), G.C.DARK_EDITION, G.C.WHITE)
+        local display_info = {localize("k_partner")}
+        if self.badges_info and next(self.badges_info) then
+            for _, v in pairs(self.badges_info) do
+                if localize(v) ~= "ERROR" then
+                    display_info[#display_info+1] = localize(v)
+                else
+                    display_info[#display_info+1] = v
+                end
+            end
+        end
+        badges[#badges+1] = create_badge(display_info, G.C.DARK_EDITION, G.C.WHITE)
     end,
     generate_ui = function(self, info_queue, card, desc_nodes, specific_vars, full_UI_table)
         SMODS.Center.generate_ui(self, info_queue, card, desc_nodes, specific_vars, full_UI_table)
