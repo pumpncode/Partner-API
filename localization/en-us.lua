@@ -232,6 +232,7 @@ return {
             b_partner_random="Random",
             b_partner_skip="Skip",
             k_partner="Partner",
+            k_partner_benefit="Buff",
             k_enable_partner="Enable Partner",
             k_enable_speech_bubble="Enable Speech Bubble",
             k_temporary_unlock_all="Temporary Unlock All",
