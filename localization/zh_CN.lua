@@ -224,6 +224,7 @@ return {
             b_partner_random="随机伙伴",
             b_partner_skip="忽略伙伴",
             k_partner="伙伴",
+            k_partner_benefit="词条",
             k_enable_partner="启用伙伴",
             k_enable_speech_bubble="启用对话气泡",
             k_temporary_unlock_all="临时解锁全部",
