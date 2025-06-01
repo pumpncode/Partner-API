@@ -707,6 +707,18 @@ function Card:calculate_partner_cash()
     end
 end
 
+local SMODS_calculate_context_ref = SMODS.calculate_context
+function SMODS.calculate_context(context, return_table)
+    local _ret = SMODS_calculate_context_ref(context, return_table)
+    if G.GAME.selected_partner_card then
+        local ret = G.GAME.selected_partner_card:calculate_partner(context)
+        if ret then
+            SMODS.trigger_effects({{individual = ret}}, G.GAME.selected_partner_card)
+        end
+    end
+    return _ret
+end
+
 local SMODS_calculate_repetitions_ref = SMODS.calculate_repetitions
 SMODS.calculate_repetitions = function(card, context, reps)
     local reps = SMODS_calculate_repetitions_ref(card, context, reps)
