@@ -397,7 +397,7 @@ return {
                 name = "Napkin",
                 text = {
                     "{C:dark_edition}+#1#{} Joker Slot",
-                    "Copeies the ability",
+                    "Copies the ability",
                     "of leftmost {C:attention}Joker{}",
                 },
                 unlock={
