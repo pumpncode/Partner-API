@@ -1733,14 +1733,14 @@ Partner_API.Partner{
     loc_vars = function(self, info_queue, card)
         local link_level = self:get_link_level()
         local benefits = 1
-        if link_level == 1 then benefits = 5 end
+        if link_level == 1 then benefits = 4 end
         return { vars = {card.ability.extra.chips*benefits} }
     end,
     calculate = function(self, card, context)
         if context.joker_main and card.ability.extra.chips >= 1 then
             local link_level = self:get_link_level()
             local benefits = 1
-            if link_level == 1 then benefits = 5 end
+            if link_level == 1 then benefits = 4 end
             return {
                 message = localize{type = "variable", key = "a_chips", vars = {card.ability.extra.chips*benefits}},
                 chip_mod = card.ability.extra.chips*benefits,
