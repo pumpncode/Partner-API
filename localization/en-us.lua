@@ -1,241 +1,497 @@
 return {
     descriptions = {
         Partner={
-            pnr_partner_joker={
+            pnr_partner_jimbo={
                 name = "Jimbo",
                 text = {
-                    "Gain {C:chips}+#2#{} Chips",
+                    "Gains {C:chips}+#2#{} Chips",
                     "per hand played",
                     "{C:inactive}(Currently {C:chips}+#1#{C:inactive} Chips)",
                 },
                 unlock={
-                    "Used {C:attention}Joker",
-                    "to win on {C:attention}Gold",
-                    "{C:attention}Stake{} difficulty",
+                    "Win a run with",
+                    "{C:attention}Joker{} on",
+                    "{C:attention}Gold Stake{} difficulty",
                 },
             },
-            pnr_partner_mime={
+            pnr_partner_mute={
                 name = "Mute",
                 text = {
-                    "Retrigger {C:attention}first{} card",
-                    "{C:attention}held in hand",
-                    "{C:attention}#1#{} additional time(s)",
+                    "Retrigger {C:attention}last card{}",
+                    "held in hand ability",
                 },
                 unlock={
-                    "Used {C:attention}Mime",
-                    "to win on {C:attention}Gold",
-                    "{C:attention}Stake{} difficulty",
+                    "Win a run with",
+                    "{C:attention}Mime{} on",
+                    "{C:attention}Gold Stake{} difficulty",
                 },
             },
-            pnr_partner_raised_fist={
-                name = "Punch",
+            pnr_partner_mute_1={
+                name = "Mute",
                 text = {
-                    "if played hand",
-                    "contains a {C:attention}Pair{}",
-                    "the rank of {C:attention}lowest{}",
-                    "ranked card gives {C:mult}+#1#{} Mult",
-                    "and increase this value",
+                    "Retrigger {C:attention}last card{}",
+                    "held in hand ability",
+                    "{C:attention}2{} additional times",
                 },
                 unlock={
-                    "Used {C:attention}Raised Fist",
-                    "to win on {C:attention}Gold",
-                    "{C:attention}Stake{} difficulty",
+                    "Win a run with",
+                    "{C:attention}Mime{} on",
+                    "{C:attention}Gold Stake{} difficulty ",
                 },
             },
-            pnr_partner_egg={
+            pnr_partner_unite={
+                name = "Unite",
+                text = {
+                    "The {C:attention}highest{} ranked",
+                    "card held in hand",
+                    "gives {X:mult,C:white}X#1#{} Mult",
+                },
+                unlock={
+                    "Win a run with",
+                    "{C:attention}Raised Fist{} on",
+                    "{C:attention}Gold Stake{} difficulty",
+                },
+            },
+            pnr_partner_hatch={
                 name = "Hatch",
                 text = {
-                    "Add {C:money}$#1#{} of {C:attention}sell value",
+                    "Add {C:money}$#1#{} of sell value",
                     "to every {C:attention}Joker{}",
                     "at end of round",
                 },
                 unlock={
-                    "Used {C:attention}Egg",
-                    "to win on {C:attention}Gold",
-                    "{C:attention}Stake{} difficulty",
+                    "Win a run with",
+                    "{C:attention}Egg{} on",
+                    "{C:attention}Gold Stake{} difficulty",
                 },
             },
-            pnr_partner_burglar={
+            pnr_partner_steal={
                 name = "Steal",
                 text = {
                     "When {C:attention}Boss Blind{}",
-                    "is selected",
+                    "is selected,",
                     "gain {C:blue}+#1#{} Hands",
                 },
                 unlock={
-                    "Used {C:attention}Burglar",
-                    "to win on {C:attention}Gold",
-                    "{C:attention}Stake{} difficulty",
+                    "Win a run with",
+                    "{C:attention}Buglar{} on",
+                    "{C:attention}Gold Stake{} difficulty",
                 },
             },
-            pnr_partner_faceless={
+            pnr_partner_steal_1={
+                name = "Steal",
+                text = {
+                    "When {C:attention}Blind{} is selected,",
+                    "gain {C:red}+#1#{} Discards",
+                },
+                unlock={
+                    "Win a run with",
+                    "{C:attention}Burglar{} on",
+                    "{C:attention}Gold Stake{} difficulty",
+                },
+            },
+            pnr_partner_pale={
                 name = "Pale",
                 text = {
-                    "Earn {C:money}$#1#{} for each",
-                    "discarded {C:attention}face card{}",
+                    "Earn {C:money}$#3#{} for every", 
+                    "{C:attention}#1# {C:inactive}[#2#]{} {C:attention}face cards",
+                    "discarded",
                 },
                 unlock={
-                    "Used {C:attention}Faceless Joker",
-                    "to win on {C:attention}Gold",
-                    "{C:attention}Stake{} difficulty",
+                    "Win a run with",
+                    "{C:attention}Faceless Joker{} on",
+                    "{C:attention}Gold Stake{} difficulty",
                 },
             },
-            pnr_partner_hallucination={
+            pnr_partner_penalty={
+                name = "Penalty",
+                text = {
+                    "Recover {C:attention}half{} the cost",
+                    "when any {C:attention}Booster Pack{}",
+                    "is skipped",
+                },
+                unlock={
+                    "Win a run with",
+                    "{C:attention}Red Card{} on",
+                    "{C:attention}Gold Stake{} difficulty",
+                },
+            },
+            pnr_partner_penalty_1={
+                name = "Penalty",
+                text = {
+                    "Recover the {C:attention}full{} cost",
+                    "when any {C:attention}Booster Pack{}",
+                    "is skipped",
+                },
+                unlock={
+                    "Win a run with",
+                    "{C:attention}Red Card{} on",
+                    "on {C:attention}Gold Stake{} difficulty",
+                },
+            },
+            pnr_partner_fantasy={
                 name = "Fantasy",
                 text = {
-                    "Add an extra option of",
-                    "{C:attention}Joker{} when any",
+                    "{C:green}#1# in #2#{} chance to create",
+                    "a {C:spectral}Spectral{} card when any",
                     "{C:attention}Booster Pack{} is opened",
+                    "{C:inactive}(Must have room)",
                 },
                 unlock={
-                    "Used {C:attention}Hallucination",
-                    "to win on {C:attention}Gold",
-                    "{C:attention}Stake{} difficulty",
+                    "Win a run with",
+                    "{C:attention}Hallucination{} on",
+                    "{C:attention}Gold Stake{} difficulty",
                 },
             },
-            pnr_partner_fortune_teller={
-                name = "Divine",
+            pnr_partner_oracle={
+                name = "Oracle",
                 text = {
-                    "Shop stocks an",
-                    "extra {C:attention,T:p_arcana_normal_1}Arcana Pack{}",
-                    "every {C:attention}#2#{C:inactive} [#1#]{} rounds",
+                    "Shop stocks an additional ",
+                    "free {C:tarot,T:p_arcana_normal_1}Arcana Pack{}",
+                    "every {C:attention}#1#{C:inactive} [#2#]{} rounds",
                 },
                 unlock={
-                    "Used {C:attention}Fortune Teller",
-                    "to win on {C:attention}Gold",
-                    "{C:attention}Stake{} difficulty",
+                    "Win a run with",
+                    "{C:attention}Fortune Teller{} on",
+                    "{C:attention}Gold Stake{} difficulty",
                 },
             },
-            pnr_partner_golden={
-                name = "Plate",
+            pnr_partner_oracle_1={
+                name = "Oracle",
                 text = {
-                    "Earn {C:money}$#1#{} at",
-                    "end of round",
-                    "increase this value",
-                    "when {C:attention}Blind{} is skipped",
+                    "Shop stocks an additional ",
+                    "free {C:tarot,T:p_arcana_normal_1}Arcana Pack{}",
                 },
                 unlock={
-                    "Used {C:attention}Golden Joker",
-                    "to win on {C:attention}Gold",
-                    "{C:attention}Stake{} difficulty",
+                    "Win a run with",
+                    "{C:attention}Fortune Teller{} on",
+                    "{C:attention}Gold Stake{} difficulty",
                 },
             },
-            pnr_partner_baseball={
+            pnr_partner_finesse={
+                name = "Finesse",
+                text = {
+                    "When {C:attention}Blind{} is selected,",
+                    "{C:attention}+#1#{} hand size this round",
+                    "if {C:attention}Joker{} slots are not full",
+                },
+                unlock={
+                    "Win a run with",
+                    "{C:attention}Juggler{} on",
+                    "{C:attention}Gold Stake{} difficulty",
+                },
+            },
+            pnr_partner_finesse_1={
+                name = "Finesse",
+                text = {
+                    "When {C:attention}Blind{} is selected,",
+                    "{C:attention}+#1#{} hand size this round",
+                },
+                unlock={
+                    "Win a run with",
+                    "{C:attention}Juggle{} onr",
+                    "{C:attention}Gold Stake{} difficulty",
+                },
+            },
+            pnr_partner_gilded={
+                name = "Gilded",
+                text = {
+                    "Earn {C:money}$#1#{} at end of round",
+                    "Payout increases by {C:money}$#2#{}",
+                    "when {C:attention}Boss Blind{} is defeated",
+                },
+                unlock={
+                    "Win a run with",
+                    "{C:attention}Golden Joker{} on",
+                    "{C:attention}Gold Stake{} difficulty",
+                },
+            },
+            pnr_partner_batter={
                 name = "Batter",
                 text = {
                     "{C:green}Uncommon{} Jokers",
                     "each give {C:mult}+#1#{} Mult",
-                    "increase this value when",
-                    "{C:attention}Booster Pack{} is skipped",
                 },
                 unlock={
-                    "Used {C:attention}Baseball Card",
-                    "to win on {C:attention}Gold",
-                    "{C:attention}Stake{} difficulty",
+                    "Win a run with",
+                    "{C:attention}Baseball Card{} on",
+                    "{C:attention}Gold Stake{} difficulty",
                 },
             },
-            pnr_partner_trading={
+            pnr_partner_bargain={
                 name = "Bargain",
                 text = {
                     "If {C:attention}last discard{} of round",
-                    "has only one card",
-                    "Lose {C:money}$#1#{} and destroy it",
+                    "has only {C:attention}1{} card, destroy ",
+                    "it and lose {C:money}$#1#{}",
                 },
                 unlock={
-                    "Used {C:attention}Trading Card",
-                    "to win on {C:attention}Gold",
-                    "{C:attention}Stake{} difficulty",
+                    "Win a run with",
+                    "{C:attention}Trading Card{} on",
+                    "{C:attention}Gold Stake{} difficulty",
                 },
             },
-            pnr_partner_flash={
-                name = "Literacy",
+            pnr_partner_bargain_1={
+                name = "Bargain",
                 text = {
-                    "Once per round:",
-                    "next shop joker",
-                    "becomes {C:dark_edition,T:e_negative}Negative{}",
-                    "after {C:attention}first{} reroll",
+                    "If {C:attention}last{} discard of round",
+                    "has {C:attention}2{} or fewer cards,",
+                    "destroy all of them",
                 },
                 unlock={
-                    "Used {C:attention}Flash Card",
-                    "to win on {C:attention}Gold",
-                    "{C:attention}Stake{} difficulty",
+                    "Win a run with",
+                    "{C:attention}Trading Card{} on",
+                    "{C:attention}Gold Stake{} difficulty",
                 },
             },
-            pnr_partner_throwback={
+           pnr_partner_memory={
+                name = "Memory",
+                text = {
+                    "After each shop's first ",
+                    "{C:green}Reroll{}, the first card",
+                    "becomes {C:dark_edition,T:memory_negative}Negative{}",
+                },
+                unlock={
+                    "Win a run with",
+                    "{C:attention}Flash Card{} on",
+                    "{C:attention}Gold Stake{} difficulty",
+                },
+            },
+            pnr_partner_memory_1={
+                name = "Memory",
+                text = {
+                    "After each shop's first ",
+                    "{C:green}Reroll{}, the first card is",
+                    "free and becomes {C:dark_edition,T:memory_negative}Negative{}",
+                },
+                unlock={
+                    "Win a run with",
+                    "{C:attention}Flash Card{} on",
+                    "{C:attention}Gold Stake{} difficulty",
+                },
+            },
+            pnr_partner_stoke={
+                name = "Stoke",
+                text = {
+                    "{X:mult,C:white}X#1#{} Mult on next play",
+                    "Click to pay {C:money}$#3#{} and",
+                    "increase by {X:mult,C:white}X#2#{} Mult",
+                },
+                unlock={
+                    "Win a run with",
+                    "{C:attention}Campfire{} on",
+                    "{C:attention}Gold Stake{} difficulty",
+                },
+            },
+            pnr_partner_verify={
+                name = "Verify",
+                text = {
+                    "Click to pay {C:money}$#1#{} and",
+                    "add a random {C:attention}Seal{}",
+                    "to {C:attention}1{} selected card",
+                },
+                unlock={
+                    "Win a run with",
+                    "{C:attention}Certificate{} on",
+                    "{C:attention}Gold Stake{} difficulty",
+                },
+            },
+            pnr_partner_jump={
                 name = "Jump",
                 text = {
-                    "Click to spend {C:money}$#3#{}",
-                    "to gain {X:mult,C:white}X#2#{} Mult",
-                    "resets after hand played",
-                    "{C:inactive}(Currently {X:mult,C:white} X#1# {C:inactive} Mult)",
+                    "Gain {C:attention}#1#{} additional Tag",
+                    "when {C:attention}Blind{} is skipped",
                 },
                 unlock={
-                    "Used {C:attention}Throwback",
-                    "to win on {C:attention}Gold",
-                    "{C:attention}Stake{} difficulty",
+                    "Win a run with",
+                    "{C:attention}Throwback{} on",
+                    "{C:attention}Gold Stake{} difficulty",
                 },
             },
-            pnr_partner_hanging_chad={
+            pnr_partner_jump_1={
+                name = "Jump",
+                text = {
+                    "Gain {C:attention}#1#{} additional Tags",
+                    "when {C:attention}Blind{} is skipped",
+                },
+                unlock={
+                    "Win a run with",
+                    "{C:attention}Throwback{} on",
+                    "{C:attention}Gold Stake{} difficulty",
+                },
+            },
+            pnr_partner_vote={
                 name = "Vote",
                 text = {
-                    "Retrigger {C:attention}first{}",
-                    "scoring card",
-                    "{C:attention}#1#{} additional time(s)",
+                    "Retrigger {C:attention}first",
+                    "played card",
+                    "used in scoring",
                 },
                 unlock={
-                    "Used {C:attention}Hanging Chad",
-                    "to win on {C:attention}Gold",
-                    "{C:attention}Stake{} difficulty",
+                    "Win a run with",
+                    "{C:attention}Hanging Chad{} on",
+                    "{C:attention}Gold Stake{} difficulty",
                 },
             },
-            pnr_partner_bloodstone={
+            pnr_partner_vote_1={
+                name = "Vote",
+                text = {
+                     "Retrigger {C:attention}first{} played",
+                     "card used in scoring",
+                     "{C:attention}#1#{} additional times",
+                },
+                unlock={
+                    "Win a run with",
+                    "{C:attention}Hanging Chad{} on",
+                    "{C:attention}Gold Stake{} difficulty",
+                },
+            },
+            pnr_partner_bleed={
                 name = "Bleed",
                 text = {
-                    "First played {C:hearts}Heart",
-                    "card gives {X:mult,C:white} X#1# {} Mult",
-                    "when scored",
+                    "First played card with",
+                    "{C:hearts}Heart{} suit gives",
+                    "{X:mult,C:white}X#1#{} Mult when scored",
                 },
                 unlock={
-                    "Used {C:attention}Bloodstone",
-                    "to win on {C:attention}Gold",
-                    "{C:attention}Stake{} difficulty",
+                    "Win a run with",
+                    "{C:attention}Bloodstone{} on",
+                    "{C:attention}Gold Stake{} difficulty",
                 },
             },
-            pnr_partner_burnt={
+             pnr_partner_andrew={
+                name = "Andrew",
+                text = {
+                    "Click to pay {C:money}$#1#{}",
+                    "and gain {C:red}+#2#{} Discard",
+                },
+                unlock={
+                    "Win a run with",
+                    "{C:attention}Merry Andy{} on",
+                    "{C:attention}Gold Stake{} difficulty",
+                },
+            },
+            pnr_partner_thrill={
+                name = "Thrill",
+                text = {
+                    "{C:chips}+#1#{} Chips",
+                },
+                unlock={
+                    "Win a run with",
+                    "{C:attention}Stuntman{} on",
+                    "{C:attention}Gold Stake{} difficulty",
+                },
+            },
+            pnr_partner_napkin={
+                name = "Napkin",
+                text = {
+                    "{C:dark_edition}+#1#{} Joker Slot",
+                },
+                unlock={
+                   "Win a run with",
+                   "{C:attention}Brainstorm{} on",
+                   "{C:attention}Gold Stake{} difficulty",
+                },
+            },
+            pnr_partner_napkin_1={
+                name = "Napkin",
+                text = {
+                    "{C:dark_edition}+#1#{} Joker Slot",
+                    "Copeies the ability",
+                    "of leftmost {C:attention}Joker{}",
+                },
+                unlock={
+                    "Win a run with",
+                    "{C:attention}Brainstorm{} on",
+                    "{C:attention}Gold Stake{} difficulty",
+                },
+            },
+            pnr_partner_valid={
+                name = "Valid",
+                text = {
+                    "{C:attention}First{} base scoring card",
+                    "each round becomes a",
+                    "random {C:enhanced}Enhanced{} card",
+                },
+                unlock={
+                    "Win a run with",
+                    "{C:attention}Driver License{} on",
+                    "{C:attention}Gold Stake{} difficulty",
+                },
+            },
+            pnr_partner_valid_1={
+                name = "Valid",
+                text = {
+                    "{C:attention}First{} base scoring card",
+                    "each play becomes a",
+                    "random {C:enhanced}Enhanced{} card",
+                },
+                unlock={
+                    "Win a run with",
+                    "{C:attention}Driver License{} on",
+                    "{C:attention}Gold Stake{} difficulty",
+                },
+            },
+            pnr_partner_blaze={
                 name = "Blaze",
                 text = {
                     "{C:green}#1# in #2#{} chance to",
-                    "upgrade level of the",
+                    "upgrade the level of",
                     "{C:attention}discarded{} poker hand",
                 },
                 unlock={
-                    "Used {C:attention}Burnt Joker",
-                    "to win on {C:attention}Gold",
-                    "{C:attention}Stake{} difficulty",
+                    "Win a run with",
+                    "{C:attention}Burnt Joker{} on",
+                    "{C:attention}Gold Stake{} difficulty",
                 },
             },
         },
         Other={
-            partner_benefits={
-                name="Partner Benefits",
+            memory_negative={
+                name="Negative",
                 text={
-                    "Corresponding Joker",
-                    "will provide {C:dark_edition}benefits{}",
+                    "{C:dark_edition}+#1#{} Card Slot",
+                },
+            },
+        },
+        Mod={
+            partner={
+                name = "Partner-API",
+                text = {
+                    "Add {C:red}24{} Partners modeled after Jokers",
+                    " ",
+                    " ",
+                    "{C:gold}Credits{}",
+                    "Baimao, Betmma,",
+                    "Brookling and Snowylight",
+                    " ",
+                    " ",
+                    "{C:green}Additional Thanks{}",
+                    "Clay, Gainumki,",
+                    "Larswijn, Spriter",
+                    "and Theonegoofali",
+                    " ",
+                    " ",
+                    "Click to view the {C:blue}wiki{} page: ",
+                    "{C:attention}https://balatromods.miraheze.org/wiki/Partner{}",
                 },
             },
         },
     },
-    misc={
+     misc={
         dictionary={
             b_partners="Partners",
             b_partner_agree="Accept",
             b_partner_random="Random",
             b_partner_skip="Skip",
+            b_open_partner_wiki="Click to open the Partner Wiki",
             k_partner="Partner",
-            k_partner_benefit="Buff",
+            k_partner_buffed_level="Buffed lvl.",
             k_enable_partner="Enable Partner",
             k_enable_speech_bubble="Enable Speech Bubble",
-            k_temporary_unlock_all="Temporary Unlock All",
+            k_temporary_unlock_all="Temporarily Unlock All",
+            k_partner_destroyed="Destroyed!",
+            k_partner_enhanced="Enhanced!",
             ml_partner_unique_ability={
                 "Cards may enhance the abilities of",
                 "corresponding partners",
@@ -268,43 +524,43 @@ return {
                 "Snowylight",
                 "Betmma",
             },
-            pnr_partner_mime_1={
+            pnr_partner_mute_1={
                 ":)"
             },
-            pnr_partner_mime_2={
+            pnr_partner_mute_2={
                 ":D"
             },
-            pnr_partner_mime_3={
+            pnr_partner_mute_3={
                 ":P"
             },
-            pnr_partner_mime_4={
+            pnr_partner_mute_4={
                 ":I"
             },
-            pnr_partner_mime_5={
+            pnr_partner_mute_5={
                 "XD"
             },
-            pnr_partner_mime_6={
+            pnr_partner_mute_6={
                 ":l"
             },
-            pnr_partner_throwback_1={
+            pnr_partner_jump_1={
                 "Cool Beans"
             },
-            pnr_partner_throwback_2={
-                "Remember, if there's a blind", 
+            pnr_partner_jump_2={
+                "Remember, if there's a blind",
                 "you're not digging the vibe of:",
                 "SAY NO AND SKIP!"
             },
-            pnr_partner_throwback_3={
+            pnr_partner_jump_3={
                 "Totally Tubular!"
             },
-            pnr_partner_throwback_4={
+            pnr_partner_jump_4={
                 "Gnarly!"
             },
-            pnr_partner_throwback_5={
+            pnr_partner_jump_5={
                 "Let's make some",
                 "bodacious plays!"
             },
-            pnr_partner_throwback_6={
+            pnr_partner_jump_6={
                 "Hey-yo!", 
                 "Freshest partner in town,",
                 "reporting for duty!"
