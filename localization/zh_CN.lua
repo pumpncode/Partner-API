@@ -237,7 +237,7 @@ return {
                     "难度下获胜",
                 },
             },
-           pnr_partner_memory={
+            pnr_partner_memory={
                 name = "闪示伙伴",
                 text = {
                     "令每个商店第一次",
@@ -350,7 +350,7 @@ return {
                     "难度下获胜",
                 },
             },
-             pnr_partner_andrew={
+            pnr_partner_andrew={
                 name = "安迪伙伴",
                 text = {
                     "点击支付{C:money}$#1#{}",
