@@ -1686,25 +1686,30 @@ Partner_API.Partner{
     pos = {x = 4, y = 0},
     loc_txt = {},
     atlas = "Partner",
-    config = {extra = {cost = 2, discard_mod = 1}},
+    config = {extra = {cost = 3, discard_mod = 1, draw_mod = 3}},
     link_config = {j_merry_andy = 1},
     loc_vars = function(self, info_queue, card)
         local link_level = self:get_link_level()
-        local benefits = 1
-        if link_level == 1 then benefits = 2 end
-        return { vars = {card.ability.extra.cost/benefits, card.ability.extra.discard_mod} }
+        local key = self.key
+        if link_level == 1 then key = key.."_"..link_level end
+        return { key = key, vars = {card.ability.extra.cost, card.ability.extra.discard_mod, card.ability.extra.draw_mod} }
     end,
     calculate = function(self, card, context)
-        if context.partner_click and G.STATE == G.STATES.SELECTING_HAND then
+        if context.partner_click and ((to_big(G.GAME.dollars) - to_big(G.GAME.bankrupt_at)) >= to_big(card.ability.extra.cost)) then
             local link_level = self:get_link_level()
-            local benefits = 1
-            if link_level == 1 then benefits = 2 end
-            if (to_big(G.GAME.dollars) - to_big(G.GAME.bankrupt_at)) >= to_big(card.ability.extra.cost/benefits) then
+            if link_level ~= 1 and G.STATE == G.STATES.SELECTING_HAND then
                 G.E_MANAGER:add_event(Event({func = function()
                     ease_discard(card.ability.extra.discard_mod)
-                    ease_dollars(-card.ability.extra.cost/benefits)
-                    card_eval_status_text(card, "dollars", -card.ability.extra.cost/benefits)
+                    ease_dollars(-card.ability.extra.cost)
+                    card_eval_status_text(card, "dollars", -card.ability.extra.cost)
                 return true end}))
+            elseif link_level == 1 and G.hand and G.hand.cards[1] and G.deck and G.deck.cards[1] then
+                local hand_space = math.min(#G.deck.cards, card.ability.extra.draw_mod)
+                for i = 1, hand_space do
+                    draw_card(G.deck, G.hand, i*100/hand_space, "up", true)
+                end
+                ease_dollars(-card.ability.extra.cost)
+                card_eval_status_text(card, "dollars", -card.ability.extra.cost)
             end
         end
     end,
