@@ -244,7 +244,7 @@ return {
                     "{C:attention}Gold Stake{} difficulty",
                 },
             },
-           pnr_partner_memory={
+            pnr_partner_memory={
                 name = "Memory",
                 text = {
                     "After each shop's first ",
@@ -359,11 +359,23 @@ return {
                     "{C:attention}Gold Stake{} difficulty",
                 },
             },
-             pnr_partner_andrew={
+            pnr_partner_andrew={
                 name = "Andrew",
                 text = {
                     "Click to pay {C:money}$#1#{}",
                     "and gain {C:red}+#2#{} Discard",
+                },
+                unlock={
+                    "Win a run with",
+                    "{C:attention}Merry Andy{} on",
+                    "{C:attention}Gold Stake{} difficulty",
+                },
+            },
+            pnr_partner_andrew_1={
+                name = "Andrew",
+                text = {
+                    "Click to pay {C:money}$#1#{}",
+                    "and draw {C:attention}#3#{} cards",
                 },
                 unlock={
                     "Win a run with",
