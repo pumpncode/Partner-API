@@ -362,6 +362,18 @@ return {
                     "难度下获胜",
                 },
             },
+            pnr_partner_andrew_1={
+                name = "安迪伙伴",
+                text = {
+                    "点击支付{C:money}$#1#{}",
+                    "抽取{C:attention}#3#{}张牌",
+                },
+                unlock={
+                    "使用{C:attention}快乐安迪",
+                    "在{C:attention}金注",
+                    "难度下获胜",
+                },
+            },
             pnr_partner_thrill={
                 name = "特技伙伴",
                 text = {
