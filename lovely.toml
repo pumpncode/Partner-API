@@ -1,5 +1,5 @@
 [manifest]
-version = "1.0.2b"
+version = "1.0.2c"
 dump_lua = true
 priority = 0
 
@@ -10,9 +10,13 @@ pattern = '''-- context.final_scoring_step calculations'''
 position = "before"
 payload = '''
 
-        if G.GAME.selected_partner_card then
-            local ret = G.GAME.selected_partner_card:calculate_partner({full_hand = G.play.cards, scoring_hand = scoring_hand, scoring_name = text, poker_hands = poker_hands, partner_main = true})
-            if ret then
+        if G.GAME.selected_partner_card and G.GAME.selected_partner_card.ability then
+            local ret = G.GAME.selected_partner_card:calculate_partner({full_hand = G.play.cards, scoring_hand = scoring_hand, scoring_name = text, poker_hands = poker_hands, joker_main = true})
+            if ret and ret.duplication then
+                for k, v in ipairs(ret) do
+                    SMODS.trigger_effects({{individual = v}}, G.GAME.selected_partner_card)
+                end
+            elseif ret then
                 SMODS.trigger_effects({{individual = ret}}, G.GAME.selected_partner_card)
             end
         end
@@ -24,121 +28,10 @@ overwrite = false
 [[patches]]
 [patches.pattern]
 target = "functions/state_events.lua"
-pattern = '''-- context.after calculations'''
+pattern = '''if G.GAME.dollars >= 5 and not G.GAME.modifiers.no_interest then'''
 position = "before"
 payload = '''
-
-    if G.GAME.selected_partner_card then
-        local ret = G.GAME.selected_partner_card:calculate_partner({full_hand = G.play.cards, scoring_hand = scoring_hand, scoring_name = text, poker_hands = poker_hands, partner_after = true})
-        if ret then
-            SMODS.trigger_effects({{individual = ret}}, G.GAME.selected_partner_card)
-        end
-    end
-
-'''
-match_indent = false
-overwrite = false
-
-[[patches]]
-[patches.pattern]
-target = "functions/state_events.lua"
-pattern = '''-- TARGET: effects before scoring starts'''
-position = "before"
-payload = '''
-
-        if G.GAME.selected_partner_card then
-            local ret = G.GAME.selected_partner_card:calculate_partner({full_hand = G.play.cards, scoring_hand = scoring_hand, scoring_name = text, poker_hands = poker_hands, partner_before = true})
-            if ret then
-                SMODS.trigger_effects({{individual = ret}}, G.GAME.selected_partner_card)
-            end
-        end
-
-'''
-match_indent = false
-overwrite = false
-
-[[patches]]
-[patches.pattern]
-target = "functions/state_events.lua"
-pattern = '''-- TARGET: main end_of_round evaluation'''
-position = "before"
-payload = '''
-
-            if G.GAME.selected_partner_card then
-                local ret = G.GAME.selected_partner_card:calculate_partner({partner_end_of_round = true, game_over = game_over})
-                if ret then
-                    SMODS.trigger_effects({{individual = ret}}, G.GAME.selected_partner_card)
-                end
-            end
-
-'''
-match_indent = false
-overwrite = false
-
-[[patches]]
-[patches.pattern]
-target = "functions/state_events.lua"
-pattern = '''-- TARGET: setting_blind effects'''
-position = "before"
-payload = '''
-
-            if G.GAME.selected_partner_card then
-                local ret = G.GAME.selected_partner_card:calculate_partner({partner_setting_blind = true, blind = G.GAME.round_resets.blind})
-                if ret then
-                    SMODS.trigger_effects({{individual = ret}}, G.GAME.selected_partner_card)
-                end
-            end
-
-'''
-match_indent = false
-overwrite = false
-
-[[patches]]
-[patches.pattern]
-target = "functions/state_events.lua"
-pattern = '''-- TARGET: pre_discard'''
-position = "before"
-payload = '''
-
-        if G.GAME.selected_partner_card then
-            local ret = G.GAME.selected_partner_card:calculate_partner({partner_pre_discard = true, full_hand = G.hand.highlighted, hook = hook})
-            if ret then
-                SMODS.trigger_effects({{individual = ret}}, G.GAME.selected_partner_card)
-            end
-        end
-
-'''
-match_indent = false
-overwrite = false
-
-[[patches]]
-[patches.pattern]
-target = "functions/state_events.lua"
-pattern = '''SMODS.calculate_context({discard = true, other_card =  G.hand.highlighted[i], full_hand = G.hand.highlighted}, effects)'''
-position = "before"
-payload = '''
-
-            if G.GAME.selected_partner_card then
-                local ret = G.GAME.selected_partner_card:calculate_partner({partner_discard = true, other_card = G.hand.highlighted[i], full_hand = G.hand.highlighted})
-                if ret then
-                    if ret.remove then
-                        removed = true
-                    end
-                    SMODS.trigger_effects({{individual = ret}}, G.GAME.selected_partner_card)
-                end
-            end
-
-'''
-match_indent = false
-overwrite = false
-
-[[patches]]
-[patches.pattern]
-target = "functions/state_events.lua"
-pattern = '''for _, area in ipairs(SMODS.get_card_areas('jokers')) do'''
-position = "before"
-payload = '''
-    if G.GAME.selected_partner_card then
+    if G.GAME.selected_partner_card and G.GAME.selected_partner_card.ability then
         local ret = G.GAME.selected_partner_card:calculate_partner_cash()
         if ret then
             add_round_eval_row({dollars = ret, bonus = true, name = "partner", pitch = pitch, card = G.GAME.selected_partner_card})
@@ -169,9 +62,17 @@ pattern = '''-- Calculate context.other_joker effects'''
 position = "before"
 payload = '''
 
-            if G.GAME.selected_partner_card then
-                local ret = G.GAME.selected_partner_card:calculate_partner({partner_other_main = true, other_card = _card, full_hand = G.play.cards, scoring_hand = scoring_hand, scoring_name = text, poker_hands = poker_hands})
-                if ret then
+            if G.GAME.selected_partner_card and G.GAME.selected_partner_card.ability then
+                local other_key = "other_unknown"
+                if _card.ability.set == "Joker" then other_key = "other_joker" end
+                if _card.ability.consumeable then other_key = "other_consumeable" end
+                if _card.ability.set == "Voucher" then other_key = "other_voucher" end
+                local ret = G.GAME.selected_partner_card:calculate_partner({full_hand = G.play.cards, scoring_hand = scoring_hand, scoring_name = text, poker_hands = poker_hands, [other_key] = _card, other_main = _card})
+                if ret and ret.duplication then
+                    for k, v in ipairs(ret) do
+                        table.insert(effects, {individual = v})
+                    end
+                elseif ret then
                     table.insert(effects, {individual = ret})
                 end
             end
@@ -182,126 +83,17 @@ overwrite = false
 
 [[patches]]
 [patches.pattern]
-target = "card.lua"
-pattern = '''SMODS.calculate_context({open_booster = true, card = self})'''
+target = "functions/misc_functions.lua"
+pattern = '''elseif part.control.X or part.control.B then'''
 position = "before"
 payload = '''
-
-            if G.GAME.selected_partner_card then
-                local ret = G.GAME.selected_partner_card:calculate_partner({partner_open_booster = true, card = self})
-                if ret then
-                    SMODS.trigger_effects({{individual = ret}}, G.GAME.selected_partner_card)
-                end
-            end
-
-'''
-match_indent = false
-overwrite = false
-
-[[patches]]
-[patches.pattern]
-target = "game.lua"
-pattern = '''if not nosave_shop then SMODS.calculate_context({starting_shop = true}) end'''
-position = "before"
-payload = '''
-
-                                if G.GAME.selected_partner_card then
-                                    local ret = G.GAME.selected_partner_card:calculate_partner({partner_starting_shop = true})
-                                    if ret then
-                                        SMODS.trigger_effects({{individual = ret}}, G.GAME.selected_partner_card)
-                                    end
-                                end
-
-'''
-match_indent = false
-overwrite = false
-
-[[patches]]
-[patches.pattern]
-target = "functions/button_callbacks.lua"
-pattern = '''SMODS.calculate_context({reroll_shop = true, cost = reroll_cost})'''
-position = "before"
-payload = '''
-
-            if G.GAME.selected_partner_card then
-                local ret = G.GAME.selected_partner_card:calculate_partner({partner_reroll_shop = true, cost = reroll_cost})
-                if ret then
-                    SMODS.trigger_effects({{individual = ret}}, G.GAME.selected_partner_card)
-                end
-            end
-
-'''
-match_indent = false
-overwrite = false
-
-[[patches]]
-[patches.pattern]
-target = "functions/button_callbacks.lua"
-pattern = '''SMODS.calculate_context({ending_shop = true})'''
-position = "before"
-payload = '''
-
-      if G.GAME.selected_partner_card then
-        local ret = G.GAME.selected_partner_card:calculate_partner({partner_ending_shop = true})
-        if ret then
-          SMODS.trigger_effects({{individual = ret}}, G.GAME.selected_partner_card)
-        end
-      end
-
-'''
-match_indent = false
-overwrite = false
-
-[[patches]]
-[patches.pattern]
-target = "functions/button_callbacks.lua"
-pattern = '''SMODS.calculate_context({skip_blind = true})'''
-position = "before"
-payload = '''
-
-          if G.GAME.selected_partner_card then
-            local ret = G.GAME.selected_partner_card:calculate_partner({partner_skip_blind = true})
-            if ret then
-              SMODS.trigger_effects({{individual = ret}}, G.GAME.selected_partner_card)
-            end
-          end
-
-'''
-match_indent = false
-overwrite = false
-
-[[patches]]
-[patches.pattern]
-target = "functions/button_callbacks.lua"
-pattern = '''SMODS.calculate_context({skipping_booster = true, booster = booster_obj})'''
-position = "before"
-payload = '''
-
-    if G.GAME.selected_partner_card then
-      local ret = G.GAME.selected_partner_card:calculate_partner({partner_skipping_booster = true, booster = booster_obj})
-      if ret then
-        SMODS.trigger_effects({{individual = ret}}, G.GAME.selected_partner_card)
-      end
-    end
-
-'''
-match_indent = false
-overwrite = false
-
-[[patches]]
-[patches.pattern]
-target = "functions/button_callbacks.lua"
-pattern = '''SMODS.calculate_context({selling_card = true, card = card})'''
-position = "before"
-payload = '''
-
-    if G.GAME.selected_partner_card then
-      local ret = G.GAME.selected_partner_card:calculate_partner({partner_selling_card = true, card = card})
-      if ret then
-        SMODS.trigger_effects({{individual = ret}}, G.GAME.selected_partner_card)
-      end
-    end
-
+        elseif part.control.T and part.control.T == "memory_negative" then
+          final_line[#final_line+1] = {n=G.UIT.T, config={
+          detailed_tooltip = {key = part.control.T, set = "Other", vars = {1}} or nil,
+          text = assembled_string,
+          shadow = args.shadow,
+          colour = part.control.V and args.vars.colours[tonumber(part.control.V)] or not part.control.C and args.text_colour or loc_colour(part.control.C or nil, args.default_col),
+          scale = 0.32*(part.control.s and tonumber(part.control.s) or args.scale  or 1)*desc_scale},}
 '''
 match_indent = false
 overwrite = false
