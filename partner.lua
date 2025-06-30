@@ -169,6 +169,8 @@ function Card:set_sprites(_center, _front)
     if _center and _center.set == "Partner" and not _center:is_unlocked() then
         self.children.center.atlas = G.ASSET_ATLAS["partner_Partner"]
         self.children.center:set_sprite_pos({x = 0, y = 4})
+	self.T.h = G.CARD_H*58/95
+        self.T.w = G.CARD_W*46/71
     end
 end
 
@@ -199,8 +201,8 @@ end
 local create_UIBox_card_unlock_ref = create_UIBox_card_unlock
 function create_UIBox_card_unlock(card_center)
     local ret = create_UIBox_card_unlock_ref(card_center)
-    local title = ret.nodes[1].nodes[1].nodes[1].nodes[1].nodes[1].nodes[1].nodes[1].nodes[1].config
     if card_center.set == "Partner" then
+        local title = ret.nodes[1].nodes[1].nodes[1].nodes[1].nodes[1].nodes[1].nodes[1].nodes[1].config
         title.object:remove()
         title.object = DynaText({string = {localize("k_partner")}, colours = {G.C.BLUE}, shadow = true, rotate = true, bump = true, pop_in = 0.3, pop_in_rate = 2, scale = 1.2})
     end
@@ -210,8 +212,8 @@ end
 local create_UIBox_notify_alert_ref = create_UIBox_notify_alert
 function create_UIBox_notify_alert(_achievement, _type)
     local ret = create_UIBox_notify_alert_ref(_achievement, _type)
-    local title = ret.nodes[1].nodes[1].nodes[2].nodes[1].nodes[1].config
     if _type == "Partner" then
+        local title = ret.nodes[1].nodes[1].nodes[2].nodes[1].nodes[1].config
         title.text = localize("k_partner")
     end
     return ret
@@ -510,7 +512,14 @@ end
 local Game_start_run_ref = Game.start_run
 function Game:start_run(args)
     Game_start_run_ref(self, args)
-    if not G.GAME.selected_partner and not G.GAME.skip_partner and Partner_API.config.enable_partner then
+    local any_unlocked = nil
+    for _, v in pairs(G.P_CENTER_POOLS["Partner"]) do
+        if v:is_unlocked() then
+            any_unlocked = true
+            break
+        end
+    end
+    if any_unlocked and not G.GAME.selected_partner and not G.GAME.skip_partner and Partner_API.config.enable_partner then
         G.E_MANAGER:add_event(Event({func = function()
             G.FUNCS.run_setup_partners_option()
         return true end}))
@@ -1040,7 +1049,7 @@ Partner_API.Partner{
     name = "Steal Partner",
     unlocked = false,
     discovered = true,
-    pos = {x = 0, y = 1},
+    pos = {x = 1, y = 1},
     loc_txt = {},
     atlas = "Partner",
     config = {extra = {hands_played_mod = 2}},
@@ -1086,7 +1095,7 @@ Partner_API.Partner{
     name = "Pale Partner",
     unlocked = false,
     discovered = true,
-    pos = {x = 1, y = 1},
+    pos = {x = 2, y = 1},
     loc_txt = {},
     atlas = "Partner",
     config = {extra = {discard_requires = 9, current_requires = 9, discard_dollars = 6}},
@@ -1165,7 +1174,7 @@ Partner_API.Partner{
     name = "Fantasy Partner",
     unlocked = false,
     discovered = true,
-    pos = {x = 2, y = 1},
+    pos = {x = 0, y = 1},
     loc_txt = {},
     atlas = "Partner",
     config = {extra = {odd = 4}},
