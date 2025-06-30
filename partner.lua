@@ -290,6 +290,92 @@ function Card:move(dt)
     end
 end
 
+-- Pet Context Page
+
+local centerX, centerY = 0, 0 
+local tracking = false          
+local totalAngle = 0            
+local prevAngle = nil           
+local minRadius = 0.5            
+local resetTime = 0.2
+local countedTime = 0
+local petTime = 0
+local hoveredCard = nil
+
+local ref = Card.hover
+function Card:hover()
+    tracking = true
+    hoveredCard = self
+    local ret = ref(self)
+    return ret
+end
+
+local ref = Card.stop_hover
+function Card:stop_hover()
+    if hoveredCard == self then
+        tracking = false
+        hoveredCard = nil
+    end
+    local ret = ref(self)
+    return ret
+end
+
+local ref = love.update
+function love.update(dt)
+    ref(dt)
+    countedTime = countedTime + dt
+    if countedTime >= resetTime then
+        local x, y = love.mouse.getPosition()
+        countedTime = countedTime - resetTime
+        centerX, centerY = x, y 
+        prevAngle = nil
+    end
+    if tracking then
+        petTime = petTime + dt
+        local x, y = love.mouse.getPosition()
+        centerX = centerX or x
+        centerY = centerY or y
+        local dx, dy = x - centerX, y - centerY
+        local radius = math.sqrt(dx*dx + dy*dy)
+        
+        if radius >= minRadius then
+            local angle = math.atan2(dy, dx) 
+            if prevAngle then
+                local diff = angle - prevAngle
+                if diff > math.pi then
+                    diff = diff - 2 * math.pi
+                elseif diff < -math.pi then
+                    diff = diff + 2 * math.pi
+                end
+                
+                if math.sign(totalAngle) ~= math.sign(diff) and totalAngle ~= 0 and diff ~= 0 then
+                    petTime = 0
+                    totalAngle = 0
+                end
+                totalAngle = totalAngle + diff
+                
+                if math.abs(totalAngle) >= 2 * math.pi then
+                    totalAngle = 0
+                    petTime = 0
+                    if G.GAME.selected_partner_card and G.GAME.selected_partner_card == hoveredCard then
+                        local ret = G.GAME.selected_partner_card:calculate_partner({pet_card = hoveredCard, pet_time = petTime, pet_direction = (totalAngle > 0 and "clockwise" or "counter-clockwise")})
+                        if ret then
+                            SMODS.trigger_effects({{individual = ret}}, G.GAME.selected_partner_card)
+                        end
+                    end
+                end
+            end
+            
+            prevAngle = angle
+        else
+            prevAngle = nil 
+        end
+    else
+        totalAngle = 0
+        petTime = 0
+    end
+end
+
 -- New Run Page
 
 G.FUNCS.run_setup_partners_option = function(e)
