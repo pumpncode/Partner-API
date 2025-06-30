@@ -97,3 +97,19 @@ payload = '''
 '''
 match_indent = false
 overwrite = false
+
+[[patches]]
+[patches.pattern]
+target = "functions/misc_functions.lua"
+pattern = '''if v.set and ((v.set == 'Joker') or v.consumeable or (v.set == 'Edition') or (v.set == 'Voucher') or (v.set == 'Back') or (v.set == 'Booster')) then'''
+position = "before"
+payload = '''
+      if v.set and v.set == "Partner" then
+        G.DISCOVER_TALLIES.total.of = G.DISCOVER_TALLIES.total.of + 1
+        if v.unlocked then
+          G.DISCOVER_TALLIES.total.tally = G.DISCOVER_TALLIES.total.tally + 1
+        end
+      end
+'''
+match_indent = false
+overwrite = false
