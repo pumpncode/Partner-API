@@ -167,10 +167,8 @@ local Card_set_sprites_ref = Card.set_sprites
 function Card:set_sprites(_center, _front)
     Card_set_sprites_ref(self, _center, _front)
     if _center and _center.set == "Partner" and not _center:is_unlocked() then
-        self.children.center.atlas = G.ASSET_ATLAS["partner_Partner"]
-        self.children.center:set_sprite_pos({x = 0, y = 4})
-	self.T.h = G.CARD_H*58/95
-        self.T.w = G.CARD_W*46/71
+        self.children.center = Sprite(self.T.x, self.T.y, G.CARD_W*46/71, G.CARD_H*58/95, G.ASSET_ATLAS["partner_Partner"], {x = 0, y = 4})
+        self.children.center:set_role({major = self, role_type = "Glued", draw_major = self})
     end
 end
 
