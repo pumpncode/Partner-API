@@ -221,7 +221,7 @@ end
 
 function Card:add_partner_speech_bubble(forced_key)
     if not Partner_API.config.enable_speech_bubble then return end
-    if self.children.speech_bubble then self.children.speech_bubble:remove() end
+    if self.children.speech_bubble then self.speech_bubble_continued = true return end
     local align = nil
     if self.T.x+self.T.w/2 > G.ROOM.T.w/2 then align = "cl" end
     self.config.speech_bubble_align = {align = align or "cr", offset = {x=align and -0.1 or 0.1,y=0}, parent = self}
@@ -254,14 +254,14 @@ end
 
 function Card:partner_say_stuff(n, not_first)
     if not Partner_API.config.enable_speech_bubble then return end
-    self.talking = true
+    if self.speech_bubble_continued then return end
     if not not_first then 
         G.E_MANAGER:add_event(Event({trigger = "after", delay = 0.1, func = function()
             if self.children.speech_bubble then self.children.speech_bubble.states.visible = true end
             self:partner_say_stuff(n, true)
         return true end}))
     else
-        if n <= 0 then self.talking = false; return end
+        if n <= 0 then return end
         play_sound("voice"..math.random(1, 11), G.SPEEDFACTOR*(math.random()*0.2+1), 0.5)
         self:juice_up()
         G.E_MANAGER:add_event(Event({trigger = "after", blockable = false, blocking = false, delay = 0.13, func = function()
@@ -270,8 +270,10 @@ function Card:partner_say_stuff(n, not_first)
     end
 end
 
-function Card:remove_partner_speech_bubble()
-    if self.children.speech_bubble then self.children.speech_bubble:remove(); self.children.speech_bubble = nil end
+function Card:remove_partner_speech_bubble(manual)
+    if self.speech_bubble_removed then self.speech_bubble_removed = nil return end
+    if self.children.speech_bubble then self.children.speech_bubble:remove(); self.children.speech_bubble = nil; self.speech_bubble_continued = nil end
+    if manual then self.speech_bubble_removed = true end
 end
 
 local Card_draw_ref = Card.draw
@@ -669,7 +671,7 @@ function Card:click()
     end
     if G.GAME.selected_partner_card and G.GAME.selected_partner_card.ability and G.GAME.selected_partner_card == self then
         if self.children.speech_bubble then
-            self:remove_partner_speech_bubble()
+            self:remove_partner_speech_bubble(true)
         elseif not G.GAME.partner_click_deal then
             G.GAME.partner_click_deal = true
             local ret = G.GAME.selected_partner_card:calculate_partner({partner_click = true})
@@ -734,6 +736,35 @@ end
 
 function Card:general_partner_speech(context)
     if not context or self.config.center.no_quips then return end
+    if context.end_of_round and not context.individual and not context.repetition and G.GAME.blind.boss then
+        if G.GAME.no_first_pet then G.GAME.no_first_pet = nil end
+    end
+    if context.partner_pet and not G.GAME.no_first_pet then
+        G.GAME.no_first_pet = true
+        if self.config.center.individual_quips then
+            G.E_MANAGER:add_event(Event({func = function()
+                local max_quips = 0
+                for k, v in pairs(G.localization.misc.quips) do
+                    if string.find(k, self.config.center.key) then
+                        max_quips = max_quips + 1
+                    end
+                end
+                self:add_partner_speech_bubble(self.config.center.key.."_"..math.random(1, max_quips))
+                self:partner_say_stuff(5)
+            return true end}))
+        else
+            G.E_MANAGER:add_event(Event({func = function()
+                if G.GAME.round <= 8 then
+                    self:add_partner_speech_bubble("pnr_"..math.random(7,12))
+                elseif G.GAME.round <= 16 then
+                    self:add_partner_speech_bubble("pnr_"..math.random(13,18))
+                else
+                    self:add_partner_speech_bubble("pnr_"..math.random(19,24))
+                end
+                self:partner_say_stuff(5)
+            return true end}))
+        end
+    end
     if context.setting_blind and G.GAME.round == 1 then
         if self.config.center.individual_quips then
             G.E_MANAGER:add_event(Event({func = function()
