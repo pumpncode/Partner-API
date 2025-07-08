@@ -535,7 +535,7 @@ function Game:start_run(args)
             G.GAME.selected_partner_card:juice_up(0.3, 0.5)
             if G.GAME.selected_partner_table then
                 for k, v in pairs(G.GAME.selected_partner_table) do
-                    G.GAME.selected_partner_card.ability.extra[k] = v
+                    G.GAME.selected_partner_card.ability[k] = v
                 end
                 G.GAME.selected_partner_table = nil
             end
@@ -651,7 +651,7 @@ local save_run_ref = save_run
 function save_run()
     if G.GAME.selected_partner_card and G.GAME.selected_partner_card.ability then
         G.GAME.selected_partner_table = G.GAME.selected_partner_table or {}
-        for k, v in pairs(G.GAME.selected_partner_card.ability.extra) do
+        for k, v in pairs(G.GAME.selected_partner_card.ability) do
             G.GAME.selected_partner_table[k] = v
         end
     end
