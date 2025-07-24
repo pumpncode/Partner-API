@@ -382,7 +382,7 @@ function create_partner_selection()
     for i = 1, #G.partner_selection do
         local center = G.P_CENTER_POOLS["Partner"][i+(#G.partner_selection*(viewed_partner-1))]
         if not center then break end
-        local card = Card(G.partner_selection[i].T.x+G.partner_selection[i].T.w/2-G.CARD_W*23/71, G.partner_selection[i].T.y+G.partner_selection[i].T.h/2-G.CARD_H*29/95, G.CARD_W*46/71, G.CARD_H*58/95, empty, center)
+        local card = Card(G.partner_selection[i].T.x, G.partner_selection[i].T.y, G.CARD_W*46/71, G.CARD_H*58/95, empty, center)
         card.no_ui = true; card.config.card.no_ui = true
         card.ability.fake_partner = true
         G.partner_selection[i]:emplace(card)
@@ -406,7 +406,7 @@ G.FUNCS.your_selection_partner_page = function(args)
     for j = 1, #G.partner_selection do
         local center = G.P_CENTER_POOLS["Partner"][j+(#G.partner_selection*(args.cycle_config.current_option-1))]
         if not center then break end
-        local card = Card(G.partner_selection[j].T.x+G.partner_selection[j].T.w/2-G.CARD_W*23/71, G.partner_selection[j].T.y+G.partner_selection[j].T.h/2-G.CARD_H*29/95, G.CARD_W*46/71, G.CARD_H*58/95, G.P_CARDS.empty, center)
+        local card = Card(G.partner_selection[j].T.x, G.partner_selection[j].T.y, G.CARD_W*46/71, G.CARD_H*58/95, G.P_CARDS.empty, center)
         card.no_ui = true; card.config.card.no_ui = true
         card.ability.fake_partner = true
         G.partner_selection[j]:emplace(card)
@@ -751,6 +751,7 @@ function Card:general_partner_speech(context)
                 end
                 self:add_partner_speech_bubble(self.config.center.key.."_"..math.random(1, max_quips))
                 self:partner_say_stuff(5)
+		if self.speech_bubble_continued then G.GAME.no_first_pet = nil end
             return true end}))
         else
             G.E_MANAGER:add_event(Event({func = function()
@@ -762,6 +763,7 @@ function Card:general_partner_speech(context)
                     self:add_partner_speech_bubble("pnr_"..math.random(19,24))
                 end
                 self:partner_say_stuff(5)
+		if self.speech_bubble_continued then G.GAME.no_first_pet = nil end
             return true end}))
         end
     end
