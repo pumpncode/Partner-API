@@ -28,7 +28,7 @@ overwrite = false
 [[patches]]
 [patches.pattern]
 target = "functions/state_events.lua"
-pattern = '''if G.GAME.dollars >= 5 and not G.GAME.modifiers.no_interest then'''
+pattern = '''local i = 0'''
 position = "before"
 payload = '''
     if G.GAME.selected_partner_card and G.GAME.selected_partner_card.ability then
@@ -46,7 +46,7 @@ overwrite = false
 [[patches]]
 [patches.pattern]
 target = "functions/common_events.lua"
-pattern = '''elseif config.name == 'interest' then'''
+pattern = '''elseif config.name == 'custom' then'''
 position = "before"
 payload = '''
                 elseif string.find(config.name, "partner") then
@@ -113,3 +113,4 @@ payload = '''
 '''
 match_indent = false
 overwrite = false
+
