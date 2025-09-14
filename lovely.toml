@@ -1,5 +1,5 @@
 [manifest]
-version = "1.0.2c"
+version = "1.0.2e"
 dump_lua = true
 priority = 0
 
@@ -28,7 +28,7 @@ overwrite = false
 [[patches]]
 [patches.pattern]
 target = "functions/state_events.lua"
-pattern = '''if G.GAME.dollars >= 5 and not G.GAME.modifiers.no_interest then'''
+pattern = '''local i = 0'''
 position = "before"
 payload = '''
     if G.GAME.selected_partner_card and G.GAME.selected_partner_card.ability then
@@ -46,7 +46,7 @@ overwrite = false
 [[patches]]
 [patches.pattern]
 target = "functions/common_events.lua"
-pattern = '''elseif config.name == 'interest' then'''
+pattern = '''elseif config.name == 'custom' then'''
 position = "before"
 payload = '''
                 elseif string.find(config.name, "partner") then
@@ -97,3 +97,20 @@ payload = '''
 '''
 match_indent = false
 overwrite = false
+
+[[patches]]
+[patches.pattern]
+target = "functions/misc_functions.lua"
+pattern = '''if v.set and ((v.set == 'Joker') or v.consumeable or (v.set == 'Edition') or (v.set == 'Voucher') or (v.set == 'Back') or (v.set == 'Booster')) then'''
+position = "before"
+payload = '''
+      if v.set and v.set == "Partner" then
+        G.DISCOVER_TALLIES.total.of = G.DISCOVER_TALLIES.total.of + 1
+        if v.unlocked then
+          G.DISCOVER_TALLIES.total.tally = G.DISCOVER_TALLIES.total.tally + 1
+        end
+      end
+'''
+match_indent = false
+overwrite = false
+

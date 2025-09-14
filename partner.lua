@@ -167,8 +167,10 @@ local Card_set_sprites_ref = Card.set_sprites
 function Card:set_sprites(_center, _front)
     Card_set_sprites_ref(self, _center, _front)
     if _center and _center.set == "Partner" and not _center:is_unlocked() then
-        self.children.center.atlas = G.ASSET_ATLAS["partner_Partner"]
-        self.children.center:set_sprite_pos({x = 0, y = 4})
+        self.children.center = Sprite(self.T.x, self.T.y, G.CARD_W*46/71, G.CARD_H*58/95, G.ASSET_ATLAS["partner_Partner"], {x = 0, y = 4})
+        self.children.center:set_role({major = self, role_type = "Glued", draw_major = self})
+        self.T.h = G.CARD_H*58/95
+        self.T.w = G.CARD_W*46/71
     end
 end
 
@@ -199,8 +201,8 @@ end
 local create_UIBox_card_unlock_ref = create_UIBox_card_unlock
 function create_UIBox_card_unlock(card_center)
     local ret = create_UIBox_card_unlock_ref(card_center)
-    local title = ret.nodes[1].nodes[1].nodes[1].nodes[1].nodes[1].nodes[1].nodes[1].nodes[1].config
     if card_center.set == "Partner" then
+        local title = ret.nodes[1].nodes[1].nodes[1].nodes[1].nodes[1].nodes[1].nodes[1].nodes[1].config
         title.object:remove()
         title.object = DynaText({string = {localize("k_partner")}, colours = {G.C.BLUE}, shadow = true, rotate = true, bump = true, pop_in = 0.3, pop_in_rate = 2, scale = 1.2})
     end
@@ -210,8 +212,8 @@ end
 local create_UIBox_notify_alert_ref = create_UIBox_notify_alert
 function create_UIBox_notify_alert(_achievement, _type)
     local ret = create_UIBox_notify_alert_ref(_achievement, _type)
-    local title = ret.nodes[1].nodes[1].nodes[2].nodes[1].nodes[1].config
     if _type == "Partner" then
+        local title = ret.nodes[1].nodes[1].nodes[2].nodes[1].nodes[1].config
         title.text = localize("k_partner")
     end
     return ret
@@ -219,7 +221,7 @@ end
 
 function Card:add_partner_speech_bubble(forced_key)
     if not Partner_API.config.enable_speech_bubble then return end
-    if self.children.speech_bubble then self.children.speech_bubble:remove() end
+    if self.children.speech_bubble then self.speech_bubble_continued = true return end
     local align = nil
     if self.T.x+self.T.w/2 > G.ROOM.T.w/2 then align = "cl" end
     self.config.speech_bubble_align = {align = align or "cr", offset = {x=align and -0.1 or 0.1,y=0}, parent = self}
@@ -252,14 +254,14 @@ end
 
 function Card:partner_say_stuff(n, not_first)
     if not Partner_API.config.enable_speech_bubble then return end
-    self.talking = true
+    if self.speech_bubble_continued then return end
     if not not_first then 
         G.E_MANAGER:add_event(Event({trigger = "after", delay = 0.1, func = function()
             if self.children.speech_bubble then self.children.speech_bubble.states.visible = true end
             self:partner_say_stuff(n, true)
         return true end}))
     else
-        if n <= 0 then self.talking = false; return end
+        if n <= 0 then return end
         play_sound("voice"..math.random(1, 11), G.SPEEDFACTOR*(math.random()*0.2+1), 0.5)
         self:juice_up()
         G.E_MANAGER:add_event(Event({trigger = "after", blockable = false, blocking = false, delay = 0.13, func = function()
@@ -268,8 +270,10 @@ function Card:partner_say_stuff(n, not_first)
     end
 end
 
-function Card:remove_partner_speech_bubble()
-    if self.children.speech_bubble then self.children.speech_bubble:remove(); self.children.speech_bubble = nil end
+function Card:remove_partner_speech_bubble(manual)
+    if self.speech_bubble_removed then self.speech_bubble_removed = nil return end
+    if self.children.speech_bubble then self.children.speech_bubble:remove(); self.children.speech_bubble = nil; self.speech_bubble_continued = nil end
+    if manual then self.speech_bubble_removed = true end
 end
 
 local Card_draw_ref = Card.draw
@@ -378,7 +382,7 @@ function create_partner_selection()
     for i = 1, #G.partner_selection do
         local center = G.P_CENTER_POOLS["Partner"][i+(#G.partner_selection*(viewed_partner-1))]
         if not center then break end
-        local card = Card(G.partner_selection[i].T.x+G.partner_selection[i].T.w/2-G.CARD_W*23/71, G.partner_selection[i].T.y+G.partner_selection[i].T.h/2-G.CARD_H*29/95, G.CARD_W*46/71, G.CARD_H*58/95, empty, center)
+        local card = Card(G.partner_selection[i].T.x, G.partner_selection[i].T.y, G.CARD_W*46/71, G.CARD_H*58/95, empty, center)
         card.no_ui = true; card.config.card.no_ui = true
         card.ability.fake_partner = true
         G.partner_selection[i]:emplace(card)
@@ -402,7 +406,7 @@ G.FUNCS.your_selection_partner_page = function(args)
     for j = 1, #G.partner_selection do
         local center = G.P_CENTER_POOLS["Partner"][j+(#G.partner_selection*(args.cycle_config.current_option-1))]
         if not center then break end
-        local card = Card(G.partner_selection[j].T.x+G.partner_selection[j].T.w/2-G.CARD_W*23/71, G.partner_selection[j].T.y+G.partner_selection[j].T.h/2-G.CARD_H*29/95, G.CARD_W*46/71, G.CARD_H*58/95, G.P_CARDS.empty, center)
+        local card = Card(G.partner_selection[j].T.x, G.partner_selection[j].T.y, G.CARD_W*46/71, G.CARD_H*58/95, G.P_CARDS.empty, center)
         card.no_ui = true; card.config.card.no_ui = true
         card.ability.fake_partner = true
         G.partner_selection[j]:emplace(card)
@@ -510,7 +514,14 @@ end
 local Game_start_run_ref = Game.start_run
 function Game:start_run(args)
     Game_start_run_ref(self, args)
-    if not G.GAME.selected_partner and not G.GAME.skip_partner and Partner_API.config.enable_partner then
+    local any_unlocked = nil
+    for _, v in pairs(G.P_CENTER_POOLS["Partner"]) do
+        if v:is_unlocked() then
+            any_unlocked = true
+            break
+        end
+    end
+    if any_unlocked and not G.GAME.selected_partner and not G.GAME.skip_partner and Partner_API.config.enable_partner then
         G.E_MANAGER:add_event(Event({func = function()
             G.FUNCS.run_setup_partners_option()
         return true end}))
@@ -524,7 +535,7 @@ function Game:start_run(args)
             G.GAME.selected_partner_card:juice_up(0.3, 0.5)
             if G.GAME.selected_partner_table then
                 for k, v in pairs(G.GAME.selected_partner_table) do
-                    G.GAME.selected_partner_card.ability.extra[k] = v
+                    G.GAME.selected_partner_card.ability[k] = v
                 end
                 G.GAME.selected_partner_table = nil
             end
@@ -566,6 +577,29 @@ function Controller:update(dt)
             self.clicked.partner_R_target:partner_R_click()
             self.clicked.partner_R_handled = true
         end
+    end
+    if G.GAME and G.GAME.selected_partner_card and G.GAME.selected_partner_card.ability and self.cursor_hover.target and self.cursor_hover.target == G.GAME.selected_partner_card then
+        if not G.GAME.partner_pet_dist or not G.GAME.partner_pet_dist_T then
+            G.GAME.partner_pet_dist = G.GAME.partner_pet_dist or 0
+            G.GAME.partner_pet_dist_T = G.GAME.partner_pet_dist_T or {x = self.cursor_position.x, y = self.cursor_position.y}
+        elseif G.GAME.partner_pet_dist and G.GAME.partner_pet_dist_T then
+            G.GAME.partner_pet_dist = G.GAME.partner_pet_dist + Vector_Dist(G.GAME.partner_pet_dist_T, {x = self.cursor_position.x, y = self.cursor_position.y})
+            G.GAME.partner_pet_dist_T = {x = self.cursor_position.x, y = self.cursor_position.y}
+            if G.GAME.partner_pet_dist > 500 and not G.GAME.partner_pet_deal then
+                G.GAME.partner_pet_deal = true
+                local ret = G.GAME.selected_partner_card:calculate_partner({partner_pet = true})
+                if ret then
+                    SMODS.trigger_effects({{individual = ret}}, G.GAME.selected_partner_card)
+                end
+                G.E_MANAGER:add_event(Event({func = function()
+                    G.GAME.partner_pet_dist = 0
+                    G.GAME.partner_pet_deal = nil
+                return true end}))
+            end
+        end
+    elseif (self.cursor_hover.target and self.cursor_hover.target ~= G.GAME.selected_partner_card or not self.cursor_hover.target) and (G.GAME.partner_pet_dist or G.GAME.partner_pet_dist_T) then
+        G.GAME.partner_pet_dist = nil
+        G.GAME.partner_pet_dist_T = nil
     end
 end
 
@@ -617,7 +651,7 @@ local save_run_ref = save_run
 function save_run()
     if G.GAME.selected_partner_card and G.GAME.selected_partner_card.ability then
         G.GAME.selected_partner_table = G.GAME.selected_partner_table or {}
-        for k, v in pairs(G.GAME.selected_partner_card.ability.extra) do
+        for k, v in pairs(G.GAME.selected_partner_card.ability) do
             G.GAME.selected_partner_table[k] = v
         end
     end
@@ -637,7 +671,7 @@ function Card:click()
     end
     if G.GAME.selected_partner_card and G.GAME.selected_partner_card.ability and G.GAME.selected_partner_card == self then
         if self.children.speech_bubble then
-            self:remove_partner_speech_bubble()
+            self:remove_partner_speech_bubble(true)
         elseif not G.GAME.partner_click_deal then
             G.GAME.partner_click_deal = true
             local ret = G.GAME.selected_partner_card:calculate_partner({partner_click = true})
@@ -702,6 +736,37 @@ end
 
 function Card:general_partner_speech(context)
     if not context or self.config.center.no_quips then return end
+    if context.end_of_round and not context.individual and not context.repetition and G.GAME.blind.boss then
+        if G.GAME.no_first_pet then G.GAME.no_first_pet = nil end
+    end
+    if context.partner_pet and not G.GAME.no_first_pet then
+        G.GAME.no_first_pet = true
+        if self.config.center.individual_quips then
+            G.E_MANAGER:add_event(Event({func = function()
+                local max_quips = 0
+                for k, v in pairs(G.localization.misc.quips) do
+                    if string.find(k, self.config.center.key) then
+                        max_quips = max_quips + 1
+                    end
+                end
+                self:add_partner_speech_bubble(self.config.center.key.."_"..math.random(1, max_quips))
+                self:partner_say_stuff(5)
+		if self.speech_bubble_continued then G.GAME.no_first_pet = nil end
+            return true end}))
+        else
+            G.E_MANAGER:add_event(Event({func = function()
+                if G.GAME.round <= 8 then
+                    self:add_partner_speech_bubble("pnr_"..math.random(7,12))
+                elseif G.GAME.round <= 16 then
+                    self:add_partner_speech_bubble("pnr_"..math.random(13,18))
+                else
+                    self:add_partner_speech_bubble("pnr_"..math.random(19,24))
+                end
+                self:partner_say_stuff(5)
+		if self.speech_bubble_continued then G.GAME.no_first_pet = nil end
+            return true end}))
+        end
+    end
     if context.setting_blind and G.GAME.round == 1 then
         if self.config.center.individual_quips then
             G.E_MANAGER:add_event(Event({func = function()
@@ -1017,7 +1082,7 @@ Partner_API.Partner{
     name = "Steal Partner",
     unlocked = false,
     discovered = true,
-    pos = {x = 0, y = 1},
+    pos = {x = 1, y = 1},
     loc_txt = {},
     atlas = "Partner",
     config = {extra = {hands_played_mod = 2}},
@@ -1063,7 +1128,7 @@ Partner_API.Partner{
     name = "Pale Partner",
     unlocked = false,
     discovered = true,
-    pos = {x = 1, y = 1},
+    pos = {x = 2, y = 1},
     loc_txt = {},
     atlas = "Partner",
     config = {extra = {discard_requires = 9, current_requires = 9, discard_dollars = 6}},
@@ -1142,7 +1207,7 @@ Partner_API.Partner{
     name = "Fantasy Partner",
     unlocked = false,
     discovered = true,
-    pos = {x = 2, y = 1},
+    pos = {x = 0, y = 1},
     loc_txt = {},
     atlas = "Partner",
     config = {extra = {odd = 4}},

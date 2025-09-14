@@ -536,6 +536,66 @@ return {
                 "Snowylight",
                 "Betmma",
             },
+            pnr_7={
+                "You've done better",
+                "than this before",
+            },
+            pnr_8={
+                "Next time",
+                "aim a little better",
+            },
+            pnr_9={
+                "This is going to be",
+                "long and boring game",
+            },
+            pnr_10={
+                "Well, you didn't die",
+            },
+            pnr_11={
+                "yawn",
+            },
+            pnr_12={
+                "Why am I here?",
+            },
+            pnr_13={
+                "...well done",
+            },
+            pnr_14={
+                "Not bad for",
+                "a clumsy fellow",
+            },
+            pnr_15={
+                "That was alright",
+                "I guess",
+            },
+            pnr_16={
+                "Decent use of hands",
+            },
+            pnr_17={
+                "I'd give that a C... minus",
+            },
+            pnr_18={
+                "Maybe I was wrong about you",
+            },
+            pnr_19={
+                "We make a pretty good team!",
+            },
+            pnr_20={
+                "Top-notch work",
+            },
+            pnr_21={
+                "Showndown Boss",
+                "here we come!",
+            },
+            pnr_22={
+                "Yeah!",
+            },
+            pnr_23={
+                "Go team Balatro!",
+            },
+            pnr_24={
+                "It's a great journey",
+            },
             pnr_partner_mute_1={
                 ":)"
             },
