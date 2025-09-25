@@ -457,6 +457,7 @@ end
 G.FUNCS.skip_partner = function()
     G.FUNCS.exit_overlay_menu()
     G.GAME.skip_partner = true
+	G.E_MANAGER:add_event(Event({func = function() save_run() return true end}))
 end
 
 G.FUNCS.random_partner = function()
@@ -487,6 +488,7 @@ G.FUNCS.select_partner = function()
         G.GAME.selected_partner_card:juice_up(0.3, 0.5)
         local ret = G.GAME.selected_partner_card:calculate_partner_begin()
         if ret then SMODS.trigger_effects({{individual = ret}}, G.GAME.selected_partner_card) end
+		save_run()
     return true end}))
 end
 
