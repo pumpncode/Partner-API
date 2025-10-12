@@ -1,5 +1,5 @@
 [manifest]
-version = "1.0.2f"
+version = "1.0.2g"
 dump_lua = true
 priority = 0
 
@@ -114,3 +114,4 @@ payload = '''
 match_indent = false
 
 overwrite = false
+
