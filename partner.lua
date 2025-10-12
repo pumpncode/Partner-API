@@ -1875,7 +1875,7 @@ Partner_API.Partner{
     end,
     check_for_unlock = function(self, args)
         for _, v in pairs(G.P_CENTER_POOLS["Joker"]) do
-            if v.key == "j_brainstorm" then
+            if v.key == "j_stuntman" then
                 if get_joker_win_sticker(v, true) >= 8 then
                     return true
                 end
