@@ -505,92 +505,92 @@ return {
             },
         },
 quips={
-    pnr_1={
+    general_1={
         "Salut,",
         "mon pote !",
     },
-    pnr_2={
+    general_2={
         "T’inquiète,",
         "je reste dans le coin !",
     },
-    pnr_3={
+    general_3={
         "J’le sens bien,",
         "tu vas tout déchirer !",
     },
-    pnr_4={
+    general_4={
         "Allez, j’crois en toi,",
         "tu peux win ce run !",
     },
-    pnr_5={
+    general_5={
         "Les pros arrivent toujours",
         "prêts à tout, tu sais !",
     },
-    pnr_6={
+    general_6={
         "Crédits :",
         "Brookling",
         "Snowylight",
         "Betmma",
     },
-    pnr_7={
+    low_1={
         "T’as déjà fait mieux…",
         "mais bon, c’est pas la cata.",
     },
-    pnr_8={
+    low_2={
         "La prochaine fois,",
         "essaie de viser autre chose que le sol.",
     },
-    pnr_9={
+    low_3={
         "Oof…",
         "ça sent la partie longue et molle.",
     },
-    pnr_10={
+    low_4={
         "Eh, t’es encore en vie,",
         "c’est déjà ça !",
     },
-    pnr_11={
+    low_5={
         "*bâillement dramatique*",
     },
-    pnr_12={
+    low_6={
         "Sérieusement… pourquoi je suis ici déjà ?",
     },
-    pnr_13={
+    medium_1={
         "...ouais, pas mal.",
     },
-    pnr_14={
+    medium_2={
         "Hé, pas mal du tout,",
         "pour un maladroit pareil !",
     },
-    pnr_15={
+    medium_3={
         "Mouais...",
         "ça passe.",
     },
-    pnr_16={
+    medium_4={
         "Pas mauvais avec tes petites mimines !",
     },
-    pnr_17={
+    medium_5={
         "J’te mets un C... moins.",
     },
-    pnr_18={
+    medium_6={
         "Ok, peut-être que j’me suis trompé sur toi.",
     },
-    pnr_19={
+    high_1={
         "On fait une sacrée équipe, pas vrai ?",
     },
-    pnr_20={
+    high_2={
         "Top niveau !",
         "Là t’assures !",
     },
-    pnr_21={
+    high_3={
         "Allez, boss final,",
         "prépare-toi à souffrir !",
     },
-    pnr_22={
+    high_4={
         "YEAH !!",
     },
-    pnr_23={
+    high_5={
         "Team Balatro, en avant !!",
     },
-    pnr_24={
+    high_6={
         "Quel run de folie, sérieux.",
     },
     pnr_partner_mute_1={
