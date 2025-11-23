@@ -508,91 +508,91 @@ return {
             },
         },
         quips={
-            pnr_1={
+            general_1={
                 "¡Hola",
                 "Amigo!",
             },
-            pnr_2={
+            general_2={
                 "¡Me quedaré",
                 "contigo!",
             },
-            pnr_3={
+            general_3={
                 "¡Estoy seguro de que",
                 "vamos a arrasar!",
             },
-            pnr_4={
+            general_4={
                 "Estoy seguro de",
                 "que vamos a ganar",
             },
-            pnr_5={
+            general_5={
                 "Compañerito",
                 "profesional",
             },
-            pnr_6={
+            general_6={
                 "Créditos:",
                 "Brookling",
                 "Snowylight",
                 "Betmma",
             },
-            pnr_7={
+            low_1={
                 "Haz logrado mejores",
                 "antes de esta",
             },
-            pnr_8={
+            low_2={
                 "La próxima será",
             },
-            pnr_9={
+            low_3={
                 "Estoy será largo",
             },
-            pnr_10={
+            low_4={
                 "Bueno no haz perdido",
             },
-            pnr_11={
+            low_5={
                 "Mmmmm...",
             },
-            pnr_12={
+            low_6={
                 "¿Cómo llegue aquí?",
             },
-            pnr_13={
+            medium_1={
                 "Bien hecho...",
             },
-            pnr_14={
+            medium_2={
                 "Nada mal para",
                 "alguien que no",
                 "sabe leer"
             },
-            pnr_15={
+            medium_3={
                 "Estuvo",
                 "decente",
             },
-            pnr_16={
+            medium_4={
                 "Prestaste atención",
             },
-            pnr_17={
+            medium_5={
                 "Eso mecere C... menos",
             },
-            pnr_18={
+            medium_6={
                 "Supongo que te",
                 "subestimé",
             },
-            pnr_19={
+            high_1={
                 "¡Hacemos buen",
                 "equipo!"
             },
-            pnr_20={
+            high_2={
                 "Trabajo de Primera",
             },
-            pnr_21={
+            high_3={
                 "Ciega Final",
                 "¡Allá vamos!",
             },
-            pnr_22={
+            high_4={
                 "¿Si sabes leer no?",
             },
-            pnr_23={
+            high_5={
                 "Hora de Balatro",
             },
-            pnr_24={
+            high_6={
                 "Fue una buena partida",
             },
             pnr_partner_mute_1={
