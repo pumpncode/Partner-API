@@ -757,12 +757,22 @@ function Card:general_partner_speech(context)
             return true end}))
         else
             G.E_MANAGER:add_event(Event({func = function()
+                local low_quips, medium_quips, high_quips = {}, {}, {}
+                for k, v in pairs(G.localization.misc.quips) do
+                    if string.find(k, "low") then
+                        low_quips[#low_quips+1] = k
+                    elseif string.find(k, "medium") then
+                        medium_quips[#medium_quips+1] = k
+                    elseif string.find(k, "high") then
+                        high_quips[#high_quips+1] = k
+                    end
+                end
                 if G.GAME.round <= 8 then
-                    self:add_partner_speech_bubble("pnr_"..math.random(7,12))
+                    self:add_partner_speech_bubble(pseudorandom_element(low_quips, pseudoseed('low')))
                 elseif G.GAME.round <= 16 then
-                    self:add_partner_speech_bubble("pnr_"..math.random(13,18))
+                    self:add_partner_speech_bubble(pseudorandom_element(medium_quips, pseudoseed('medium')))
                 else
-                    self:add_partner_speech_bubble("pnr_"..math.random(19,24))
+                    self:add_partner_speech_bubble(pseudorandom_element(high_quips, pseudoseed('high')))
                 end
                 self:partner_say_stuff(5)
                 if self.speech_bubble_continued then G.GAME.no_first_pet = nil end
