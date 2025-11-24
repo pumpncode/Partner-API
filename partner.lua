@@ -768,11 +768,11 @@ function Card:general_partner_speech(context)
                     end
                 end
                 if G.GAME.round <= 8 then
-                    self:add_partner_speech_bubble(pseudorandom_element(low_quips, pseudoseed('low')))
+                    self:add_partner_speech_bubble(pseudorandom_element(low_quips, pseudoseed("low")))
                 elseif G.GAME.round <= 16 then
-                    self:add_partner_speech_bubble(pseudorandom_element(medium_quips, pseudoseed('medium')))
+                    self:add_partner_speech_bubble(pseudorandom_element(medium_quips, pseudoseed("medium")))
                 else
-                    self:add_partner_speech_bubble(pseudorandom_element(high_quips, pseudoseed('high')))
+                    self:add_partner_speech_bubble(pseudorandom_element(high_quips, pseudoseed("high")))
                 end
                 self:partner_say_stuff(5)
                 if self.speech_bubble_continued then G.GAME.no_first_pet = nil end
@@ -793,7 +793,13 @@ function Card:general_partner_speech(context)
             return true end}))
         else
             G.E_MANAGER:add_event(Event({func = function()
-                self:add_partner_speech_bubble("pnr_"..math.random(1,6))
+                local general_quips = {}
+                for k, v in pairs(G.localization.misc.quips) do
+                    if string.find(k, "general") then
+                        general_quips[#general_quips+1] = k
+                    end
+                end
+                self:add_partner_speech_bubble(pseudorandom_element(general_quips, pseudoseed("general")))
                 self:partner_say_stuff(5)
             return true end}))
         end
@@ -812,7 +818,13 @@ function Card:general_partner_speech(context)
             return true end}))
         else
             G.E_MANAGER:add_event(Event({func = function()
-                self:add_partner_speech_bubble("dq_1")
+                local ending_quips = {"dq_1"}
+                for k, v in pairs(G.localization.misc.quips) do
+                    if string.find(k, "ending") then
+                        ending_quips[#ending_quips+1] = k
+                    end
+                end
+                self:add_partner_speech_bubble(pseudorandom_element(ending_quips, pseudoseed("ending")))
                 self:partner_say_stuff(5)
             return true end}))
         end
