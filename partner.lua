@@ -457,6 +457,7 @@ end
 G.FUNCS.skip_partner = function()
     G.FUNCS.exit_overlay_menu()
     G.GAME.skip_partner = true
+    G.E_MANAGER:add_event(Event({func = function() save_run() return true end}))
 end
 
 G.FUNCS.random_partner = function()
@@ -487,6 +488,7 @@ G.FUNCS.select_partner = function()
         G.GAME.selected_partner_card:juice_up(0.3, 0.5)
         local ret = G.GAME.selected_partner_card:calculate_partner_begin()
         if ret then SMODS.trigger_effects({{individual = ret}}, G.GAME.selected_partner_card) end
+        save_run()
     return true end}))
 end
 
@@ -751,19 +753,29 @@ function Card:general_partner_speech(context)
                 end
                 self:add_partner_speech_bubble(self.config.center.key.."_"..math.random(1, max_quips))
                 self:partner_say_stuff(5)
-		if self.speech_bubble_continued then G.GAME.no_first_pet = nil end
+                if self.speech_bubble_continued then G.GAME.no_first_pet = nil end
             return true end}))
         else
             G.E_MANAGER:add_event(Event({func = function()
+                local low_quips, medium_quips, high_quips = {}, {}, {}
+                for k, v in pairs(G.localization.misc.quips) do
+                    if string.find(k, "low") then
+                        low_quips[#low_quips+1] = k
+                    elseif string.find(k, "medium") then
+                        medium_quips[#medium_quips+1] = k
+                    elseif string.find(k, "high") then
+                        high_quips[#high_quips+1] = k
+                    end
+                end
                 if G.GAME.round <= 8 then
-                    self:add_partner_speech_bubble("pnr_"..math.random(7,12))
+                    self:add_partner_speech_bubble(pseudorandom_element(low_quips, pseudoseed("low")))
                 elseif G.GAME.round <= 16 then
-                    self:add_partner_speech_bubble("pnr_"..math.random(13,18))
+                    self:add_partner_speech_bubble(pseudorandom_element(medium_quips, pseudoseed("medium")))
                 else
-                    self:add_partner_speech_bubble("pnr_"..math.random(19,24))
+                    self:add_partner_speech_bubble(pseudorandom_element(high_quips, pseudoseed("high")))
                 end
                 self:partner_say_stuff(5)
-		if self.speech_bubble_continued then G.GAME.no_first_pet = nil end
+                if self.speech_bubble_continued then G.GAME.no_first_pet = nil end
             return true end}))
         end
     end
@@ -781,7 +793,13 @@ function Card:general_partner_speech(context)
             return true end}))
         else
             G.E_MANAGER:add_event(Event({func = function()
-                self:add_partner_speech_bubble("pnr_"..math.random(1,6))
+                local general_quips = {}
+                for k, v in pairs(G.localization.misc.quips) do
+                    if string.find(k, "general") then
+                        general_quips[#general_quips+1] = k
+                    end
+                end
+                self:add_partner_speech_bubble(pseudorandom_element(general_quips, pseudoseed("general")))
                 self:partner_say_stuff(5)
             return true end}))
         end
@@ -800,7 +818,13 @@ function Card:general_partner_speech(context)
             return true end}))
         else
             G.E_MANAGER:add_event(Event({func = function()
-                self:add_partner_speech_bubble("dq_1")
+                local ending_quips = {"dq_1"}
+                for k, v in pairs(G.localization.misc.quips) do
+                    if string.find(k, "ending") then
+                        ending_quips[#ending_quips+1] = k
+                    end
+                end
+                self:add_partner_speech_bubble(pseudorandom_element(ending_quips, pseudoseed("ending")))
                 self:partner_say_stuff(5)
             return true end}))
         end
@@ -876,7 +900,7 @@ end
 -- Atlas Page
 
 SMODS.Atlas{
-    key = "modicon",   
+    key = "modicon",
     px = 34,
     py = 34,
     path = "icon.png"
@@ -1873,7 +1897,7 @@ Partner_API.Partner{
     end,
     check_for_unlock = function(self, args)
         for _, v in pairs(G.P_CENTER_POOLS["Joker"]) do
-            if v.key == "j_stuntman" then
+            if v.key == "j_brainstorm" then
                 if get_joker_win_sticker(v, true) >= 8 then
                     return true
                 end

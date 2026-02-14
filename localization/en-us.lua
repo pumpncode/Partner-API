@@ -510,90 +510,90 @@ return {
             },
         },
         quips={
-            pnr_1={
+            general_1={
                 "Hello,",
                 "My friend!",
             },
-            pnr_2={
+            general_2={
                 "I will stay",
                 "with you!",
             },
-            pnr_3={
+            general_3={
                 "I think you will have an",
                 "outstanding performance!",
             },
-            pnr_4={
+            general_4={
                 "I believe you can",
                 "win this run!",
             },
-            pnr_5={
+            general_5={
                 "Professional partner",
                 "always come prepared",
             },
-            pnr_6={
+            general_6={
                 "Credits:",
                 "Brookling",
                 "Snowylight",
                 "Betmma",
             },
-            pnr_7={
+            low_1={
                 "You've done better",
                 "than this before",
             },
-            pnr_8={
+            low_2={
                 "Next time",
                 "aim a little better",
             },
-            pnr_9={
+            low_3={
                 "This is going to be",
                 "long and boring game",
             },
-            pnr_10={
+            low_4={
                 "Well, you didn't die",
             },
-            pnr_11={
+            low_5={
                 "yawn",
             },
-            pnr_12={
+            low_6={
                 "Why am I here?",
             },
-            pnr_13={
+            medium_1={
                 "...well done",
             },
-            pnr_14={
+            medium_2={
                 "Not bad for",
                 "a clumsy fellow",
             },
-            pnr_15={
+            medium_3={
                 "That was alright",
                 "I guess",
             },
-            pnr_16={
+            medium_4={
                 "Decent use of hands",
             },
-            pnr_17={
+            medium_5={
                 "I'd give that a C... minus",
             },
-            pnr_18={
+            medium_6={
                 "Maybe I was wrong about you",
             },
-            pnr_19={
+            high_1={
                 "We make a pretty good team!",
             },
-            pnr_20={
+            high_2={
                 "Top-notch work",
             },
-            pnr_21={
+            high_3={
                 "Showndown Boss",
                 "here we come!",
             },
-            pnr_22={
+            high_4={
                 "Yeah!",
             },
-            pnr_23={
+            high_5={
                 "Go team Balatro!",
             },
-            pnr_24={
+            high_6={
                 "It's a great journey",
             },
             pnr_partner_mute_1={
